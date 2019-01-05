@@ -1,0 +1,175 @@
+C Assignments
+
+// Global Variables
+1. Write a basic program (as mentioned in class) and make following changes
+	a. Take a global Integer variable. (Don't assign it to anything)
+	b. Print the global variable. (Inside main() )
+	c. Write two functions as "IncrementByOne" and "IncrementByTwo".
+	d. Inside "IncrementByOne" function increment the global variable by 1 and print the result.
+	e. Inside "IncrementByTwo" function increment the global variable by 2 and print the result.
+	f. Call "IncrementByOne" and "IncrementByTwo" atleast twice inside main().
+	Observe it's results.
+	
+	
+2. 	Write a basic program (as mentioned in class) and make following changes
+	a. Write a function as "GlobalCount".
+	b. In this function declare a static integer (Don't assign it to anything).
+	c. Then increment the integer and print it.
+	e. Call this function inside main() atlest twice and observe the results.
+	
+	
+3.  Make two files as "Source.c" and "First.c"
+	a.	In "Source.c", Write a basic program (as mentioned in class).
+	b.	Declare an Integer with "extern" keyword e.g: "extern int a;"
+	c.  print this varibale in main() function.
+	
+	d.  In "First.c" write "int a=7;" (Any number will do)
+	
+	e. Compile the code and observe the output.
+
+// Basic Exercises
+4a. Write a Program to Accept two numbers (say a and b, you may take any names) and
+	a. Calculate it's Sum
+	b. Calculate it's Substraction
+	c. Calculate it's product
+	d. Calculate it's Division (display error while dividing by zero)
+	e. Calculate it's Modulus (display error while dividing by zero)
+	Test the program using different integral data types signed/unsigned char/int/long.
+	Start the result with small values, later on test it with larger values.
+	Observe it's results.
+	
+4b. Write a Program to Accept two numbers (say a and b, you may take any names) and print the following results
+	a. (a&b)
+	b. (a&&b)
+	c. (a|b)
+	d. (a||b)
+	e. !a , !b
+	f. ~a,~b
+	g. (a^b)
+	h. a<<2,b<<1
+	i. a>>2,b>>1
+	
+5. 	Write a Program to Accept a number and print the number in character,decimal,octal and hex formats.
+
+6.  Write a Program to Accept a number and print the average of the numbers.
+	Note: Accept the number and store it first in Integer and later on in Float.
+
+7. Write a Program to Accept a number and print table of that number.
+   Make sure to Indent the table properly (Do not use Spaces in printf rather use escape sequences).
+
+8. Write a Program to find  greatst of two numbers.
+	i. With if-else 
+   ii. Ternary Operator
+   
+9. Write a program to accept a character 'c'  and display category of the input type
+	ALPHABET	:	c is a letter (65 to 90 or 97 to 122)
+	UPPERCASE	:	c is UPPERCASE Letter (65 to 90)
+	LOWERCASE	:	c is LOWERCASE letter (97 to 122)
+	DIGIT		:	c is DIGIT (48 to 57)
+	SPACE		:	c is space(32),tab (9), carriage return(13), new line(10)
+	OTHERS		:	Not Listed Above
+	
+10. 	Write a program to accept a point in cartesian co-ordinate nad determine the quadrant of the point.
+
+11. Write a program to accept a number (0 to 7) and display Day of the Week.
+	Note : Use switch case statements and enum.
+	
+12.	Write a program to find factorial of a given number
+	Note : use "While Loop" and "For Loop".
+   
+
+13. Print the sizes of basic Data types (Repeat the excercise with unsigned) 
+	 i. char
+	ii.	short
+   iii.	int
+    iv. float
+	 v. double
+	vi. long
+	
+	Hint:
+	printf("%d \n", sizeof( <type-name> ));
+	
+	
+14. Print the powers of 2. Make New files for both parts
+	part a)   
+			i. include "math.h" header file in your program
+		   ii. use pow() function
+		   Output:
+		   
+			2
+			4
+			8
+			16
+			32
+			64
+			128
+			256
+			512
+			1024
+			
+	part b)
+			i. Use bitwise operator "<<" Left Shift Operator 
+		   ii. Take an integer say "n" and assign it to 1
+		  iii. Use it as n<< (the power -1)
+			Output:
+			0002
+			0004
+			0008
+			0016
+			0032
+			0064
+			0128
+			0256
+			0512
+			1024
+		Note: while printing the data try using %4d or %04d as Format Specifier.
+
+15. Print the limits of 	datatypes.
+	Though all details of a datatypes are defined in "limits.h" header file calculating it is a good exercise.
+	All you have to do is extend your prevoius exercises
+	
+	1. Calculate size of the datatype
+	2. Multiply the size by 8 (why 8?, will be explained in Fundamentals). And use it for power.
+	3. min value can be calculated as -(1<<(power-1))
+	4. max value can be calculated as (1<<(power-1)) - 1
+	5. make sure your text is consistantly aligned.
+	
+	Repeat the excercise with unsigned  keyword like "unsigned int", "unsigned short" and so on. Observe the results.
+	
+	Note:
+	
+	Data Type			Format Specifier
+	char						%c
+	short						%d
+	int							%d
+	long						%l
+	
+	float						%f
+	double						%g
+	
+	In case of floating point numbers use %E and %e, and Observe Results
+	
+	
+	Get the output in below tabular formats
+	-----------------------------------------------------------------------------------
+	Data Ttype				Size 		Format Specifier					Range
+	-----------------------------------------------------------------------------------
+	char					1				%c						-128 to +127
+	unsigned char 			1					%c						   0 to 255
+	.
+	.
+	.
+	.
+	.
+	-----------------------------------------------------------------------------------
+	Note : For formating the Table use "Escape Sequences" and not Spaces in printf
+
+
+16. Print All Environment Variables.
+	Note:Make 3 separate files for using loops "while","do-while" and "for" loop.
+
+
+
+
+Enhancements : All Programs Where you had to take input from user, re-visit them, convert those programs to command line argument variables.
+
