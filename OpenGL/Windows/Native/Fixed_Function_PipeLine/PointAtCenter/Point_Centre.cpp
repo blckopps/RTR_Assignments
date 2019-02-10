@@ -1,10 +1,8 @@
 #include<Windows.h>
 #include<stdio.h>
 #include<gl/GL.h>
-#include<gl/GLU.h>
 
 #pragma comment(lib,"openGL32.lib")
-#pragma comment(lib,"glu32.lib")
 
 #define WIN_WIDTH 800
 #define WIN_HEIGHT 600
@@ -66,7 +64,7 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpszCmdLine
 
 	hwnd=CreateWindowEx(WS_EX_APPWINDOW,
 						szAppName,
-						TEXT("My APP-SHUBHAM"),
+						TEXT("My FullScreen_Window-SHUBHAM"),
 						WS_OVERLAPPEDWINDOW |WS_CLIPCHILDREN | WS_CLIPCHILDREN |WS_VISIBLE,
 						100,
 						100,
@@ -325,17 +323,7 @@ int initialize(void)
 
 void resize(int width, int height)
 {
-	if(height == 0)
-	{
-		height = 1;
-	}
 	glViewport(0, 0, (GLsizei)width,(GLsizei)height);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(45.0f,
-		(GLfloat)width/(GLfloat)height,	
-					0.1f,
-					100.0f);
 }
 
 void display(void)
@@ -344,19 +332,11 @@ void display(void)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glTranslatef(0.0f, 0.0f, -3.0f);
-	glBegin(GL_TRIANGLES);
+	glPointSize(5.0f);
+	glBegin(GL_POINTS);
 
 	glColor3f(1.0f, 0.0f, 0.0f);
-	glVertex2f(0.0f, 1.0f);
-
-	
-	glColor3f(0.0f, 1.0f, 0.0f);
-	glVertex2f(-1.0f, -1.0f);
-
-	
-	glColor3f(0.0f, 0.0f, 1.0f);
-	glVertex2f(1.0f, -1.0f);
+	glVertex2f(0.5f, 0.5f);
 
 	glEnd();
 	

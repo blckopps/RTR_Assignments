@@ -336,14 +336,14 @@ void resize(int width, int height)
 		glOrtho(-100.0f,
 				100.0f,
 				(-100.0f *((GLfloat)height /(GLfloat)width)),
-				(-100.0f *((GLfloat)height/(GLfloat)width)),
+				(100.0f *((GLfloat)height/(GLfloat)width)),
 				-100.0f,
 				100.0f);
 				
 	}
 	else
 	{
-		glOrtho((-100.0f *(((GLfloat)width) /(GLfloat)height)),
+		glOrtho((-100.0f *((GLfloat)width /(GLfloat)height)),
 			(100*((GLfloat)width /(GLfloat)height)),
 			-100.0f,
 			100.0f,
@@ -362,15 +362,15 @@ void display(void)
 	glBegin(GL_TRIANGLES);
 
 	glColor3f(1.0f, 0.0f, 0.0f);
-	glVertex2f(0.0f, 1.0f);
+	glVertex2f(0.0f, 50.0f);
 
 	
 	glColor3f(0.0f, 1.0f, 0.0f);
-	glVertex2f(-1.0f, -1.0f);
+	glVertex2f(-50.0f, -50.0f);
 
 	
 	glColor3f(0.0f, 0.0f, 1.0f);
-	glVertex2f(1.0f, -1.0f);
+	glVertex2f(50.0f, -50.0f);
 
 	glEnd();
 	
