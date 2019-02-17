@@ -1,9 +1,10 @@
 #include<Windows.h>
 #include<stdio.h>
 #include<gl/GL.h>
+#include<gl/GLU.h>
 
 #pragma comment(lib,"openGL32.lib")
-
+#pragma comment(lib,"glu32.lib")
 #define WIN_WIDTH 800
 #define WIN_HEIGHT 600
 
@@ -25,13 +26,14 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpszCmdLine
 	//FUnction declaration
 	int initialize(void);
 	void display(void);
+	//void update(void);
 
 	//variable decl
 	int iret=0;
 	bool bdone=false;
 
 	WNDCLASSEX wndclass;
-	HWND hwnd;
+	HWND hwnd=NULL;//change
 	MSG msg;
 	TCHAR szAppName[]=TEXT("MYWINDOW ");
 
@@ -58,13 +60,19 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpszCmdLine
 	wndclass.lpszMenuName=NULL;
 	wndclass.hIconSm=LoadIcon(NULL,IDI_APPLICATION);
 
-	RegisterClassEx(&wndclass);
-
+	if(RegisterClassEx(&wndclass))
+	{
+		fprintf(gpfile, "Class  register!!\n");
+	}
+	else
+	{
+		fprintf(gpfile, "class not registered\n");
+	}
 	//create window
 
 	hwnd=CreateWindowEx(WS_EX_APPWINDOW,
 						szAppName,
-						TEXT("My FullScreen_Window-SHUBHAM"),
+						TEXT("Graph-SHUBHAM"),
 						WS_OVERLAPPEDWINDOW |WS_CLIPCHILDREN | WS_CLIPCHILDREN |WS_VISIBLE,
 						100,
 						100,
@@ -130,6 +138,7 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpszCmdLine
 			if(gbActiveWindow == true)
 			{
 				//here call update
+				
 			}
 			display();
 
@@ -323,7 +332,20 @@ int initialize(void)
 
 void resize(int width, int height)
 {
+	//glViewport(0, 0, (GLsizei)width,(GLsizei)height);
+	if(height == 0)
+	{
+		height = 1;
+	}
 	glViewport(0, 0, (GLsizei)width,(GLsizei)height);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	/*gluPerspective(45.0f,
+		(GLfloat)width/(GLfloat)height,	
+					0.1f,
+					100.0f);
+		*/			
+	
 }
 
 void display(void)
@@ -331,19 +353,29 @@ void display(void)
 	float x=-1.0f;
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	glMatrixMode(GL_MODELVIEW);
+	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glPointSize(1.0f);
 
 	glBegin(GL_LINES);
-
+	
 	//glColor3f(0.0f, 0.0f, 1.0f);
 	for(int i=0;i<40;i++)
 	{
+		glColor3f(0.0f,1.0f,0.0f);
+
+		if(i==20)
+		{
+			glColor3f(0.0f,0.0f,1.0f);
+		}
 		
 		glVertex3f(1.0f, x,0.0f);
 		glVertex3f(-1.0f, x,0.0f);
-
+		if(i==20)
+		{
+			glColor3f(1.0f,0.0f,0.0f);
+		}
+		
 		glVertex3f(x,1.0f,0.0f);
 		glVertex3f(x,-1.0f,0.0f);
 		x=x+(0.05f);

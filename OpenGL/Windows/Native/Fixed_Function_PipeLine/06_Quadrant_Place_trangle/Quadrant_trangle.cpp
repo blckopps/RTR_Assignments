@@ -1,8 +1,10 @@
 #include<Windows.h>
 #include<stdio.h>
 #include<gl/GL.h>
+#include<gl/GLU.h>
 
 #pragma comment(lib,"openGL32.lib")
+#pragma comment(lib,"glu32.lib")
 
 #define WIN_WIDTH 800
 #define WIN_HEIGHT 600
@@ -19,6 +21,7 @@ HWND ghwnd=NULL;
 bool gbActiveWindow=false;
 HDC ghdc=NULL;
 HGLRC ghrc=NULL;
+int width,height;
 
 int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpszCmdLine,int iCmdShow)
 {
@@ -58,13 +61,20 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpszCmdLine
 	wndclass.lpszMenuName=NULL;
 	wndclass.hIconSm=LoadIcon(NULL,IDI_APPLICATION);
 
-	RegisterClassEx(&wndclass);
-
+	
+	if(RegisterClassEx(&wndclass))
+	{
+		fprintf(gpfile,"\n RegisterClassEX Successfull");
+	}
+	else
+	{
+		fprintf(gpfile,"RegisterClassEX Faild\n");
+	}
 	//create window
 
 	hwnd=CreateWindowEx(WS_EX_APPWINDOW,
 						szAppName,
-						TEXT("My FullScreen_Window-SHUBHAM"),
+						TEXT("My _Window_ViewPort-SHUBHAM"),
 						WS_OVERLAPPEDWINDOW |WS_CLIPCHILDREN | WS_CLIPCHILDREN |WS_VISIBLE,
 						100,
 						100,
@@ -148,7 +158,18 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT iMsg,WPARAM wParam,LPARAM lParam)
 	void uninitialize(void);
 
 	void toogle_screen(void);
-
+	//heigth width
+	//it should be in wm_size
+	/*if(bFullScreen==false)
+	{
+		 width = 800;
+		 height = 600;
+	}
+	else
+	{
+		 width=LOWORD(lParam);
+		 height=HIWORD(lParam);
+	}*/
 	switch(iMsg)
 	{	
 
@@ -164,26 +185,61 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT iMsg,WPARAM wParam,LPARAM lParam)
 			break;
 		case VK_ESCAPE:
 			if(bFullScreen == true)
-		{
-			SetWindowLong(ghwnd,
-						  GWL_STYLE,
-						  dwstyle | 
-						  WS_OVERLAPPEDWINDOW);
-				
-			SetWindowPlacement(ghwnd,&wpPrev);
-	
-			SetWindowPos(ghwnd,
-						HWND_TOP,
-						0,0,0,0,
-						SWP_NOZORDER |
-						SWP_FRAMECHANGED |
-						SWP_NOMOVE | 
-						SWP_NOSIZE|
-						SWP_NOOWNERZORDER);
-	
-			ShowCursor(TRUE);
-		}
+			{
+				toogle_screen();
+			}
 			DestroyWindow(hwnd);
+			break;
+
+		
+			case 0x30:	
+			case VK_NUMPAD0://0
+				resize(width,height);
+			break;
+
+			case 0x31:
+			case VK_NUMPAD1://1 LBH
+				glViewport(0, 0, (GLsizei)width/2,(GLsizei)height/2);
+			break;
+
+			case 0x32:
+			case VK_NUMPAD2://2	RB
+				glViewport((GLsizei)width/2,0 , (GLsizei)width/2,(GLsizei)height/2);
+			break;
+
+			case 0x33:
+			case VK_NUMPAD3://3	RT
+				glViewport((GLsizei)width/2, (GLsizei)height/2, (GLsizei)width/2,(GLsizei)height/2);
+			break;
+
+			case 0x34:	
+			case VK_NUMPAD4://4		LT
+				glViewport(0, (GLsizei)height/2, (GLsizei)width/2,(GLsizei)height/2);
+			break;
+
+			case 0x35:
+				case VK_NUMPAD5://5		LEFTHALF
+				glViewport(0, 0, (GLsizei)width/2,(GLsizei)height);
+			break;
+
+			case 0x36:
+				case VK_NUMPAD6://6	RIGHTHALF
+				glViewport((GLsizei)width/2, 0, (GLsizei)width/2,(GLsizei)height);
+			break;
+
+			case 0x37:
+				case VK_NUMPAD7://7 LOWHALF
+				glViewport(0, 0, (GLsizei)width,(GLsizei)height/2);
+			break;
+
+			case 0x38:
+				case VK_NUMPAD8://8 TOPHALF
+				glViewport(0,(GLsizei)height/2 , (GLsizei)width,(GLsizei)height/2);
+			break;
+
+			case 0x39:	
+				case VK_NUMPAD9://9
+				glViewport((GLsizei)width/4,(GLsizei)height/4 , (GLsizei)width/2,(GLsizei)height/2);
 			break;
 		
 			
@@ -199,6 +255,8 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT iMsg,WPARAM wParam,LPARAM lParam)
 			break;
 
 		case WM_SIZE:
+			 width=LOWORD(lParam);
+			height=HIWORD(lParam);
 			resize(LOWORD(lParam),HIWORD(lParam));
 			break;
 
@@ -224,7 +282,7 @@ void toogle_screen(void)
 {
 	//MONITORINFO mi;
 	
-
+	//
 	if(bFullScreen == false)
 	{
 		dwstyle=GetWindowLong(ghwnd, GWL_STYLE);
@@ -322,28 +380,40 @@ int initialize(void)
 }
 
 void resize(int width, int height)
-{
+{if(height == 0)
+	{
+		height = 1;
+	}
 	glViewport(0, 0, (GLsizei)width,(GLsizei)height);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	gluPerspective(45.0f,
+		(GLfloat)width/(GLfloat)height,	
+					0.1f,
+					100.0f);
+
 }
 
 void display(void)
 {
-	float x=-1.0f;
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glPointSize(1.0f);
+	glBegin(GL_TRIANGLES);
 
-	glBegin(GL_LINES);
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glVertex2f(0.0f, 1.0f);
 
+	
 	glColor3f(0.0f, 1.0f, 0.0f);
-	for(int i=0;i<40;i++)
-	{
-		glVertex3f(x, 1.0f,0.0f);
-		glVertex3f(x, -1.0f,0.0f);
-		x=x+(0.05f);
-	}
+	glVertex2f(-1.0f, -1.0f);
+
+	
+	glColor3f(0.0f, 0.0f, 1.0f);
+	glVertex2f(1.0f, -1.0f);
+
 	glEnd();
 	
 	SwapBuffers(ghdc);

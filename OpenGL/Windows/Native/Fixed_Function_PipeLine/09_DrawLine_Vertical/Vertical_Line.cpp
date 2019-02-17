@@ -58,13 +58,20 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpszCmdLine
 	wndclass.lpszMenuName=NULL;
 	wndclass.hIconSm=LoadIcon(NULL,IDI_APPLICATION);
 
-	RegisterClassEx(&wndclass);
+	if(RegisterClassEx(&wndclass))
+	{
+		fprintf(gpfile, "RegisterClassEx Successfull\n");
+	}
+	else
+	{
+		fprintf(gpfile, "RegisterClassEx Fail\n");
+	}
 
 	//create window
 
 	hwnd=CreateWindowEx(WS_EX_APPWINDOW,
 						szAppName,
-						TEXT("My FullScreen_Window-SHUBHAM"),
+						TEXT("Vetical_Line-SHUBHAM"),
 						WS_OVERLAPPEDWINDOW |WS_CLIPCHILDREN | WS_CLIPCHILDREN |WS_VISIBLE,
 						100,
 						100,
@@ -335,9 +342,10 @@ void display(void)
 	glPointSize(3.0f);
 	glBegin(GL_LINES);
 
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glVertex3f(-1.0f, 0.0f,0.0f);
-	glVertex3f(1.0f, 0.0f,0.0f);
+	glColor3f(0.0f, 1.0f, 0.0f);
+
+	glVertex3f(0.0f, 1.0f,0.0f);
+	glVertex3f(0.0f, -1.0f,0.0f);
 	glEnd();
 	
 	SwapBuffers(ghdc);

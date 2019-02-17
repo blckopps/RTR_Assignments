@@ -64,7 +64,7 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpszCmdLine
 
 	hwnd=CreateWindowEx(WS_EX_APPWINDOW,
 						szAppName,
-						TEXT("My FullScreen_Window-SHUBHAM"),
+						TEXT("vetical20_lines-SHUBHAM"),
 						WS_OVERLAPPEDWINDOW |WS_CLIPCHILDREN | WS_CLIPCHILDREN |WS_VISIBLE,
 						100,
 						100,
@@ -328,16 +328,30 @@ void resize(int width, int height)
 
 void display(void)
 {
+	float x=-1.0f;
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glPointSize(5.0f);
-	glBegin(GL_POINTS);
+	glPointSize(1.0f);
 
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glVertex2f(0.5f, 0.5f);
+	glBegin(GL_LINES);
 
+	
+	for(int i=0;i<40;i++)
+	{
+		if(i==20)
+		{
+			glColor3f(1.0f,0.0f,0.0f);
+		}
+		else
+		{
+			glColor3f(0.0f, 1.0f, 0.0f);
+		}
+		glVertex3f(x, 1.0f,0.0f);
+		glVertex3f(x, -1.0f,0.0f);
+		x=x+(0.05f);
+	}
 	glEnd();
 	
 	SwapBuffers(ghdc);
