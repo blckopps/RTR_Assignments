@@ -165,7 +165,8 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT iMsg,WPARAM wParam,LPARAM lParam)
 		
 			break;
 		case VK_ESCAPE:
-			if(bFullScreen == true)
+			toogle_screen();
+			/*if(bFullScreen == true)
 		{
 			SetWindowLong(ghwnd,
 						  GWL_STYLE,
@@ -184,7 +185,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT iMsg,WPARAM wParam,LPARAM lParam)
 						SWP_NOOWNERZORDER);
 	
 			ShowCursor(TRUE);
-		}
+		}*/
 			DestroyWindow(hwnd);
 			break;
 		
@@ -344,24 +345,27 @@ void display(void)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glTranslatef(1.0f, 0.0f, -3.0f);
+	glTranslatef(-1.0f, 0.0f, -3.0f);
 	glBegin(GL_TRIANGLES);
 	//
-		glColor3f(1.0f, 1.0f, 0.0f);
-
+		glColor3f(1.0f, 0.0f, 0.0f);
 		glVertex3f(0.0f, 1.0f,0.0f);
+
+		glColor3f(0.0f, 1.0f, 0.0f);
 		glVertex3f(-1.0f, -1.0f, 0.0f);
+
+		glColor3f(0.0f, 0.0f, 1.0f);
 		glVertex3f(1.0f, -1.0f, 0.0f);
 	glEnd();
 	/////////////QUAD////////
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glTranslatef(-1.0f, 0.0f, -3.0f);
+	glTranslatef(1.0f, 0.0f, -4.0f);
 
 	glBegin(GL_QUADS);
 
-		glColor3f(1.0f, 1.0f, 0.0f);
+		glColor3f(0.0f, 0.0f, 1.0f);
 
 		glVertex3f(1.0f, 1.0f, 0.0f);
 
