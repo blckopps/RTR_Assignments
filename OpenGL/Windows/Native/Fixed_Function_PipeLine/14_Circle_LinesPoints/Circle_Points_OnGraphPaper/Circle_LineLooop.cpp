@@ -345,6 +345,7 @@ void display(void)
 	glClear(GL_COLOR_BUFFER_BIT);
 	glLoadIdentity();
 	glMatrixMode(GL_MODELVIEW);
+	//glTranslatef(0.0f, 0.0f, -3.0f);
 	glPointSize(1.0f);
 	float x=-1.0f;
 	////////////Graph//////////
@@ -367,12 +368,11 @@ void display(void)
 	}
 	glEnd();
 	////////////Circle///////////
-	glBegin(GL_POINTS);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glTranslatef(0.0f, 0.0f, -3.0f);
-	glBegin(GL_POINTS);
 	
+	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+	
+	glBegin(GL_POINTS);
 		for(float i=0.0f;i<360;i=i+0.01f)
 		{
 			glColor3f(1.0f,1.0f,0.0f);
@@ -382,7 +382,7 @@ void display(void)
 			
 		}
 	
-	glEnd();
+		glEnd();
 	
 	SwapBuffers(ghdc);
 }
