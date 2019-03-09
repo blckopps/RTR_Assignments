@@ -345,7 +345,6 @@ void display(void)
 	glClear(GL_COLOR_BUFFER_BIT);
 	glLoadIdentity();
 	glMatrixMode(GL_MODELVIEW);
-	gl
 	glBegin(GL_POINTS);
 		for(float i=0.0f;i<360;i=i+0.01f)
 		{
