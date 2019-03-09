@@ -345,7 +345,7 @@ void display(void)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glTranslatef(-1.0f, 0.0f, -3.0f);
+	glTranslatef(-1.5f, 0.0f, -6.0f);
 	glBegin(GL_TRIANGLES);
 	//
 		glColor3f(1.0f, 0.0f, 0.0f);
@@ -361,7 +361,7 @@ void display(void)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glTranslatef(1.0f, 0.0f, -4.0f);
+	glTranslatef(1.5f, 0.0f, -6.0f);
 
 	glBegin(GL_QUADS);
 
