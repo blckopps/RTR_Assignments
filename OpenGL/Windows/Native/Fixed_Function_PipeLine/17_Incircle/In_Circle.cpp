@@ -411,15 +411,15 @@ void circle()
 {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glTranslatef(0.0f, -0.38f, -3.0f);
-	glScalef(-0.61f,-0.61f,-0.61f);
+	glTranslatef(0.0f, 0.0f, -3.0f);
+	
 	glBegin(GL_LINE_LOOP);
 	glColor3f(1.0f, 1.0f,0.0f);
 	for(int i=0;i<num_points;i++)
 	{
 		float deg=i*2.0f*3.14159/num_points;
 
-		glVertex2f(cos(deg), sin(deg));
+		glVertex2f((0.618f*cos(deg))+0.0f, (0.618f*sin(deg))-0.382f);
 	}
 
 	glEnd();

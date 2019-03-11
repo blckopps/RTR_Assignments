@@ -342,15 +342,31 @@ void resize(int width, int height)
 
 void display(void)
 {
-	void circle();
-	void Triangle();
+	void col(int);
 	glClear(GL_COLOR_BUFFER_BIT);
+
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glTranslatef(0.0f,0.0f,-3.0f);
-	Triangle();
-	circle();
-	
+	glTranslatef(0.0f, 0.0f, -3.0f);
+	float d=0.125f;
+	glBegin(GL_POINTS);
+	for(int j=0;j<8;j++)
+	{
+		col(j);
+		
+		for(float i=0.0f;i<360;i=i+0.01f)
+		{
+			
+			float angle=(i*2.0f*3.14159)/360;
+			
+			glVertex2f(d*cos(angle), d*sin(angle));
+			
+		}
+
+		d=d+0.125f;
+		
+	}
+	glEnd();
 	
 	SwapBuffers(ghdc);
 }
@@ -394,36 +410,40 @@ void uninitialize(void)
 		ghdc = NULL;
 	}
 }
-void Triangle()
+void col(int digit)
 {
-	glBegin(GL_LINES);
-	glVertex2f(0.0f,1.0f);
-	glVertex2f(-1.0f,-1.0f);
-
-	glVertex2f(-1.0f,-1.0f);
-	glVertex2f(1.0f,-1.0f);
-
-	glVertex2f(1.0f,-1.0f);
-	glVertex2f(0.0f,1.0f);
-
-	glVertex2f(0.0f,1.0f);
-	glVertex2f(0.0f,-1.0f);
-	glEnd();
-}
-void circle()
-{
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glTranslatef(0.0f, 0.0f, -3.0f);
-	
-	glBegin(GL_LINE_LOOP);
-	glColor3f(1.0f, 1.0f,0.0f);
-	for(int i=0;i<num_points;i++)
+	switch(digit)
 	{
-		float deg=i*2.0f*3.14159/num_points;
+			case 0:
+				glColor3f(1.0f,0.0f,0.0f);//R
+			break;
 
-		glVertex2f((0.618f*cos(deg))+0.0f, (0.618f*sin(deg))-0.382f);
+			case 1:
+				glColor3f(0.0f,1.0f,0.0f);//G
+			break;
+
+			case 2:
+				glColor3f(0.0f,0.0f,1.0f);//B
+			break;
+
+			case 3:
+				glColor3f(1.0f,1.0f,1.0f);//CYAN
+			break;
+
+			case 4:
+				glColor3f(1.0f,0.0f,1.0f);//MAG
+			break;
+
+			case 5:
+				glColor3f(1.0f,1.0f,0.0f);//YELLOW
+			break;
+
+			case 6:
+				glColor3f(1.0f,0.5f,0.0f);//orange
+			break;
+
+			case 7:
+				glColor3f(0.5f,0.5f,0.5f);//gray
+			break;
 	}
-
-	glEnd();
 }

@@ -10,8 +10,8 @@
 #define WIN_WIDTH 800
 #define WIN_HEIGHT 600
 #define num_points 1000
-float angle=0.0f;
 
+float angle=0.0f;
 FILE *gpfile = NULL;
 
 LRESULT CALLBACK WndProc(HWND,UINT,WPARAM,LPARAM);
@@ -345,6 +345,7 @@ void display(void)
 {
 	void circle();
 	void Triangle();
+	void line();
 	glClear(GL_COLOR_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -352,10 +353,10 @@ void display(void)
 	glRotatef(angle,0.0f,1.0f,0.0f);
 	Triangle();
 	circle();
-	
+	line();
 	
 	SwapBuffers(ghdc);
-	angle=angle+0.05f;
+	angle=angle+0.2f;
 }
 
 void uninitialize(void)
@@ -409,25 +410,34 @@ void Triangle()
 	glVertex2f(1.0f,-1.0f);
 	glVertex2f(0.0f,1.0f);
 
-	glVertex2f(0.0f,1.0f);
-	glVertex2f(0.0f,-1.0f);
 	glEnd();
 }
 void circle()
 {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glTranslatef(0.0f, -0.38f, -3.0f);
+	glTranslatef(0.0f, 0.0f, -3.0f);
 	glRotatef(angle,0.0f,1.0f,0.0f);
-	glScalef(-0.61f,-0.61f,-0.61f);
 	glBegin(GL_LINE_LOOP);
 	glColor3f(1.0f, 1.0f,0.0f);
 	for(int i=0;i<num_points;i++)
 	{
 		float deg=i*2.0f*3.14159/num_points;
 
-		glVertex2f(cos(deg), sin(deg));
+		glVertex2f((0.618f*cos(deg))+0.0f, (0.618f*sin(deg))-0.382f);
 	}
 
+	glEnd();
+}
+void line()
+{
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glTranslatef(0.0f, 0.0f, -3.0f);
+	glRotatef(angle,0.0f,1.0f,0.0f);
+	glBegin(GL_LINES);
+		glColor3f(1.0f,1.0f,0.0f);
+		glVertex2f(0.0f,1.0f);
+		glVertex2f(0.0f,-1.0f);
 	glEnd();
 }

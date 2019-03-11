@@ -344,10 +344,12 @@ void display(void)
 {
 	void circle();
 	void Triangle();
+	void graph();
 	glClear(GL_COLOR_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glTranslatef(0.0f,0.0f,-3.0f);
+	graph();
 	Triangle();
 	circle();
 	
@@ -396,7 +398,11 @@ void uninitialize(void)
 }
 void Triangle()
 {
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glTranslatef(0.0f, 0.0f, -3.0f);
 	glBegin(GL_LINES);
+	glColor3f(1.0f,1.0f,0.0f);
 	glVertex2f(0.0f,1.0f);
 	glVertex2f(-1.0f,-1.0f);
 
@@ -405,9 +411,6 @@ void Triangle()
 
 	glVertex2f(1.0f,-1.0f);
 	glVertex2f(0.0f,1.0f);
-
-	glVertex2f(0.0f,1.0f);
-	glVertex2f(0.0f,-1.0f);
 	glEnd();
 }
 void circle()
@@ -425,5 +428,40 @@ void circle()
 		glVertex2f((0.618f*cos(deg))+0.0f, (0.618f*sin(deg))-0.382f);
 	}
 
+	glEnd();
+}
+void graph()
+{
+	float x=-1.0f;
+	glClear(GL_COLOR_BUFFER_BIT);
+	
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glTranslatef(0.0f, 0.0f, -1.0f);
+	glPointSize(1.0f);
+
+	glBegin(GL_LINES);
+	
+	//glColor3f(0.0f, 0.0f, 1.0f);
+	for(int i=0;i<40;i++)
+	{
+		glColor3f(0.0f,1.0f,0.0f);
+
+		if(i==20)
+		{
+			glColor3f(0.0f,0.0f,1.0f);
+		}
+		
+		glVertex3f(1.0f, x,0.0f);
+		glVertex3f(-1.0f, x,0.0f);
+		if(i==20)
+		{
+			glColor3f(1.0f,0.0f,0.0f);
+		}
+		
+		glVertex3f(x,1.0f,0.0f);
+		glVertex3f(x,-1.0f,0.0f);
+		x=x+(0.05f);
+	}
 	glEnd();
 }
