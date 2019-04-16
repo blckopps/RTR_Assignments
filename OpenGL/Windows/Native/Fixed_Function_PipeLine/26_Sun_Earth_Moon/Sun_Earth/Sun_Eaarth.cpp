@@ -9,9 +9,10 @@
 
 #define WIN_WIDTH 800
 #define WIN_HEIGHT 600
-#define num_points 1000
 
-float angle_triangle=0.0f;
+
+int year,day;
+GLUquadric *gluquadric = NULL;
 
 FILE *gpfile = NULL;
 
@@ -31,7 +32,7 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpszCmdLine
 	//FUnction declaration
 	int initialize(void);
 	void display(void);
-	void update();
+	
 	//variable decl
 	int iret=0;
 	bool bdone=false;
@@ -136,7 +137,7 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpszCmdLine
 			if(gbActiveWindow == true)
 			{
 				//here call update
-				update();
+				
 			}
 			display();
 
@@ -159,7 +160,9 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT iMsg,WPARAM wParam,LPARAM lParam)
 	switch(iMsg)
 	{	
 
-		
+	/*case WM_CHAR:
+
+		break;*/
 	case WM_KEYDOWN:
 
 		switch(wParam)
@@ -167,7 +170,19 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT iMsg,WPARAM wParam,LPARAM lParam)
 		case 0x46:
 		//	MessageBox(hwnd,TEXT("P BUTTON PRESSED!!"),TEXT("BUTTON P"),MB_OK);
 			toogle_screen();
-		
+			break;
+		case 0x59://Y
+			year=(year+3)%360;
+			break;
+		case 0x79://y
+			year=(year-3)%360;
+			break;
+
+		case 0x44://D
+			day = (day+6)%360;
+			break;
+		case 0x64://d
+			day=(day-6)%360;
 			break;
 		case VK_ESCAPE:
 			if(bFullScreen == true)				//We should exit from fullscreen and then destroy the window.
@@ -356,97 +371,36 @@ void display(void)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glTranslatef(2.0f,0.0f,-6.0f);
-	glScalef(0.75f,0.75f,0.75f);
-	glRotatef(angle_triangle,1.0f,1.0f,1.0f);
 	
-	glBegin(GL_QUADS);
-	//top
-	glColor3f(1.0f,0.0f,0.0f);		//RED
-	glVertex3f(1.0f,1.0f,-1.0f);					//RT
-	glVertex3f(-1.0f,1.0f,-1.0f);					//LT
-	glVertex3f(-1.0f,1.0f,1.0f);					//LB
-	glVertex3f(1.0f,1.0f,1.0f);					//RB
-	//bottom
-	glColor3f(0.0f,1.0f,0.0f);		//green
-	glVertex3f(1.0f,-1.0f,-1.0f);					//RT
-	glVertex3f(-1.0f,-1.0f,-1.0f);					//LT
-	glVertex3f(-1.0f,-1.0f,1.0f);					//LB
-	glVertex3f(1.0f,-1.0f,1.0f);
-	////Front
-	glColor3f(0.0f,0.0f,1.0f);		//blue
-	glVertex3f(1.0f,1.0f,1.0f);					//RT
-	glVertex3f(-1.0f,1.0f,1.0f);					//LT
-	glVertex3f(-1.0f,-1.0f,1.0f);					//LB
-	glVertex3f(1.0f,-1.0f,1.0f);
-	//back
-	glColor3f(0.0f,1.0f,1.0f);		//cyan
-	glVertex3f(1.0f,1.0f,-1.0f);					//RT
-	glVertex3f(-1.0f,1.0f,-1.0f);					//LT
-	glVertex3f(-1.0f,-1.0f,-1.0f);					//LB
-	glVertex3f(1.0f,-1.0f,-1.0f);
+	gluLookAt(0.0f,0.0f,5.0f,
+				0.0f,0.0f,0.0f,
+				0.0f,1.0f,0.0f);
+	glPushMatrix();
+	glRotatef(90.0f,1.0f,0.0f,0.0f);
+	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
+	gluquadric=gluNewQuadric();
+	glColor3f(1.0f,1.0f,0.0f);
+	gluSphere(gluquadric,
+				0.75f,
+				30,
+				30);
+	glPopMatrix();
+	glPushMatrix();
+	glRotatef(GLfloat(year),0.0f,1.0f,0.0f);
+	glTranslatef(2.0f,0.0f,0.0f);
 
-	//Right
-	glColor3f(1.0f,0.0f,1.0f);		//magneta
-	glVertex3f(1.0f,1.0f,-1.0f);					//RT
-	glVertex3f(1.0f,1.0f,1.0f);					//LT
-	glVertex3f(1.0f,-1.0f,1.0f);					//LB
-	glVertex3f(1.0f,-1.0f,-1.0f);
-
-	//left
-	glColor3f(1.0f,1.0f,0.0f);		//Yeloow
-	glVertex3f(-1.0f,1.0f,1.0f);					//RT
-	glVertex3f(-1.0f,1.0f,-1.0f);					//LT
-	glVertex3f(-1.0f,-1.0f,-1.0f);					//LB
-	glVertex3f(-1.0f,-1.0f,1.0f);
-	glEnd();
-
-	////pyramid////////////////////
-	glLoadIdentity();
-	glTranslatef(-1.5f,0.0f,-6.0f);
+	//earth
+	glRotatef(90.0f,1.0f,0.0f,0.0f);
+	glRotatef(GLfloat(day),0.0f,0.0f,1.0f);
+	glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+	gluquadric=gluNewQuadric();
+	glColor3f(0.4f,0.9f,1.0f);
+	gluSphere(gluquadric,
+				0.2f,
+				20,
+				20);
+	glPopMatrix();
 	
-	glRotatef(angle_triangle,0.0f,1.0f,0.0f);
-	glBegin(GL_TRIANGLES);
-		//1St
-		glColor3f(1.0f,0.0f,0.0f);					//R 
-		glVertex3f(0.0f, 1.0f, 0.0f);				//APEX
-
-		glColor3f(0.0f,1.0f,0.0f);					//G 
-		glVertex3f(-1.0f, -1.0f, 1.0f);				//left bottom
-
-		glColor3f(0.0f,0.0f,1.0f);					//B
-		glVertex3f(1.0f, -1.0f, 1.0f);				//Rigth BOttom
-
-		//2nd
-		glColor3f(1.0f,0.0f,0.0f);					//R 
-		glVertex3f(0.0f, 1.0f, 0.0f);				//APEX
-
-		glColor3f(0.0f,0.0f,1.0f);					//B 
-		glVertex3f(1.0f, -1.0f, 1.0f);				//left bottom
-
-		glColor3f(0.0f,1.0f,0.0f);					//G
-		glVertex3f(1.0f, -1.0f, -1.0f);				//Right BOttom
-		//3rd
-		glColor3f(1.0f,0.0f,0.0f);					//R 
-		glVertex3f(0.0f, 1.0f, 0.0f);				//APEX
-
-		glColor3f(0.0f,1.0f,0.0f);					//G 
-		glVertex3f(1.0f, -1.0f, -1.0f);				//left bottom
-
-		glColor3f(0.0f,0.0f,1.0f);					//B
-		glVertex3f(-1.0f, -1.0f, -1.0f);				//Rigth BOttom
-		//4th
-		glColor3f(1.0f,0.0f,0.0f);					//R 
-		glVertex3f(0.0f, 1.0f, 0.0f);				//APEX
-
-		glColor3f(0.0f,0.0f,1.0f);					//b
-		glVertex3f(-1.0f, -1.0f, -1.0f);				//left bottom
-
-		glColor3f(0.0f,1.0f,0.0f);					//g
-		glVertex3f(-1.0f, -1.0f, 1.0f);				//Rigth BOttom
-	glEnd();
-
-
 	SwapBuffers(ghdc);
 	
 }
@@ -489,13 +443,4 @@ void uninitialize(void)
 		ReleaseDC(ghwnd, ghdc);
 		ghdc = NULL;
 	}
-}
-
-void update()
-{
-	if(angle_triangle==360)
-	{
-		angle_triangle=0.0f;
-	}
-	angle_triangle=angle_triangle+0.02f;
 }

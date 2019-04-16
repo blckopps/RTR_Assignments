@@ -77,7 +77,7 @@ void display(void)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glTranslatef(3.0f,0.0f,-6.0f);
+	glTranslatef(2.0f,0.0f,-6.0f);
 	glScalef(0.75f,0.75f,0.75f);
 	glRotatef(angle,1.0f,1.0f,1.0f);
 	
@@ -124,7 +124,7 @@ void display(void)
 
 	////pyramid////////////////////
 	glLoadIdentity();
-	glTranslatef(-2.0f,0.0f,-6.0f);
+	glTranslatef(-1.5f,0.0f,-6.0f);
 	
 	glRotatef(angle,0.0f,1.0f,0.0f);
 	glBegin(GL_TRIANGLES);
