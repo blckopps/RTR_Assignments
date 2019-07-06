@@ -445,7 +445,7 @@ void display(void)
 		glColor3f(0.0f,1.0f,0.0f);					//g
 		glVertex3f(-1.0f, -1.0f, 1.0f);				//Rigth BOttom
 	glEnd();
-
+	
 
 	SwapBuffers(ghdc);
 	

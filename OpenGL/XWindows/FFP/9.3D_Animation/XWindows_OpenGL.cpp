@@ -23,6 +23,7 @@ Display *gpdisplay = NULL;
 XVisualInfo *gpXVisualInfo  = NULL;
 Colormap gColormap;
 Window gWindow;
+float angle = 0.0f;
 
 int giWindowWidth = 600;
 int giWindowHeight = 800;
@@ -49,7 +50,8 @@ int main(void)
 	void initialize(void);
 	void resize(int, int);
 	void display(void);
-	        
+	void update(void);  
+	
         //variabal 
         int winWidth = giWindowWidth;
         int winHeight =  giWindowHeight;
@@ -171,7 +173,7 @@ int main(void)
 		       }
 		}  
 		//CALL UPDATE AND DISPLAY ...
-		//update();
+		update();
 		display();
 	}        
         Uninitialize();
@@ -201,7 +203,7 @@ void CreateWindow(void)
         	GLX_GREEN_SIZE,8,
         	GLX_BLUE_SIZE,8,
         	GLX_ALPHA_SIZE,8,
-        	
+        	GLX_DEPTH_SIZE,24,
         	None
         	
         };
@@ -369,41 +371,105 @@ void resize(int width, int height)
 void display()
 {
 	fprintf(gpfile,"Display START\n");
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glTranslatef(-1.5f, 0.0f, -6.0f);
-	glBegin(GL_TRIANGLES);
-	//
-		glColor3f(1.0f, 0.0f, 0.0f);
-		glVertex3f(0.0f, 1.0f,0.0f);
-
-		glColor3f(0.0f, 1.0f, 0.0f);
-		glVertex3f(-1.0f, -1.0f, 0.0f);
-
-		glColor3f(0.0f, 0.0f, 1.0f);
-		glVertex3f(1.0f, -1.0f, 0.0f);
-	glEnd();
-	/////////////QUAD////////
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glTranslatef(1.5f, 0.0f, -6.0f);
-
+	glTranslatef(2.0f,0.0f,-6.0f);
+	glScalef(0.75f,0.75f,0.75f);
+	glRotatef(angle,1.0f,1.0f,1.0f);
+	
 	glBegin(GL_QUADS);
+	//top
+	glColor3f(1.0f,0.0f,0.0f);		//RED
+	glVertex3f(1.0f,1.0f,-1.0f);					//RT
+	glVertex3f(-1.0f,1.0f,-1.0f);					//LT
+	glVertex3f(-1.0f,1.0f,1.0f);					//LB
+	glVertex3f(1.0f,1.0f,1.0f);					//RB
+	//bottom
+	glColor3f(0.0f,1.0f,0.0f);		//green
+	glVertex3f(1.0f,-1.0f,-1.0f);					//RT
+	glVertex3f(-1.0f,-1.0f,-1.0f);					//LT
+	glVertex3f(-1.0f,-1.0f,1.0f);					//LB
+	glVertex3f(1.0f,-1.0f,1.0f);
+	////Front
+	glColor3f(0.0f,0.0f,1.0f);		//blue
+	glVertex3f(1.0f,1.0f,1.0f);					//RT
+	glVertex3f(-1.0f,1.0f,1.0f);					//LT
+	glVertex3f(-1.0f,-1.0f,1.0f);					//LB
+	glVertex3f(1.0f,-1.0f,1.0f);
+	//back
+	glColor3f(0.0f,1.0f,1.0f);		//cyan
+	glVertex3f(1.0f,1.0f,-1.0f);					//RT
+	glVertex3f(-1.0f,1.0f,-1.0f);					//LT
+	glVertex3f(-1.0f,-1.0f,-1.0f);					//LB
+	glVertex3f(1.0f,-1.0f,-1.0f);
 
-		glColor3f(0.0f, 0.0f, 1.0f);
+	//Right
+	glColor3f(1.0f,0.0f,1.0f);		//magneta
+	glVertex3f(1.0f,1.0f,-1.0f);					//RT
+	glVertex3f(1.0f,1.0f,1.0f);					//LT
+	glVertex3f(1.0f,-1.0f,1.0f);					//LB
+	glVertex3f(1.0f,-1.0f,-1.0f);
 
-		glVertex3f(1.0f, 1.0f, 0.0f);
+	//left
+	glColor3f(1.0f,1.0f,0.0f);		//Yeloow
+	glVertex3f(-1.0f,1.0f,1.0f);					//RT
+	glVertex3f(-1.0f,1.0f,-1.0f);					//LT
+	glVertex3f(-1.0f,-1.0f,-1.0f);					//LB
+	glVertex3f(-1.0f,-1.0f,1.0f);
+	glEnd();
 
-		glVertex3f(-1.0f, 1.0f, 0.0f);
+	////pyramid////////////////////
+	glLoadIdentity();
+	glTranslatef(-1.5f,0.0f,-6.0f);
 	
-		glVertex3f(-1.0f, -1.0f, 0.0f);
-	
-		glVertex3f(1.0f, -1.0f, 0.0f);
+	glRotatef(angle,0.0f,1.0f,0.0f);
+	glBegin(GL_TRIANGLES);
+		//1St
+		glColor3f(1.0f,0.0f,0.0f);					//R 
+		glVertex3f(0.0f, 1.0f, 0.0f);				//APEX
 
-	glEnd();	
+		glColor3f(0.0f,1.0f,0.0f);					//G 
+		glVertex3f(-1.0f, -1.0f, 1.0f);				//left bottom
+
+		glColor3f(0.0f,0.0f,1.0f);					//B
+		glVertex3f(1.0f, -1.0f, 1.0f);				//Rigth BOttom
+
+		//2nd
+		glColor3f(1.0f,0.0f,0.0f);					//R 
+		glVertex3f(0.0f, 1.0f, 0.0f);				//APEX
+
+		glColor3f(0.0f,0.0f,1.0f);					//B 
+		glVertex3f(1.0f, -1.0f, 1.0f);				//left bottom
+
+		glColor3f(0.0f,1.0f,0.0f);					//G
+		glVertex3f(1.0f, -1.0f, -1.0f);				//Right BOttom
+		//3rd
+		glColor3f(1.0f,0.0f,0.0f);					//R 
+		glVertex3f(0.0f, 1.0f, 0.0f);				//APEX
+
+		glColor3f(0.0f,1.0f,0.0f);					//G 
+		glVertex3f(1.0f, -1.0f, -1.0f);				//left bottom
+
+		glColor3f(0.0f,0.0f,1.0f);					//B
+		glVertex3f(-1.0f, -1.0f, -1.0f);				//Rigth BOttom
+		//4th
+		glColor3f(1.0f,0.0f,0.0f);					//R 
+		glVertex3f(0.0f, 1.0f, 0.0f);				//APEX
+
+		glColor3f(0.0f,0.0f,1.0f);					//b
+		glVertex3f(-1.0f, -1.0f, -1.0f);				//left bottom
+
+		glColor3f(0.0f,1.0f,0.0f);					//g
+		glVertex3f(-1.0f, -1.0f, 1.0f);				//Rigth BOttom
+	glEnd();
+	
 	glXSwapBuffers(gpdisplay, gWindow);
 	fprintf(gpfile,"Display END\n");
+}
+
+void update(void)
+{
+	angle=angle+0.05f;
 }

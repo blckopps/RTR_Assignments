@@ -23,6 +23,7 @@ Display *gpdisplay = NULL;
 XVisualInfo *gpXVisualInfo  = NULL;
 Colormap gColormap;
 Window gWindow;
+float angle = 0.0f;
 
 int giWindowWidth = 600;
 int giWindowHeight = 800;
@@ -49,7 +50,8 @@ int main(void)
 	void initialize(void);
 	void resize(int, int);
 	void display(void);
-	        
+	void update(void);  
+	
         //variabal 
         int winWidth = giWindowWidth;
         int winHeight =  giWindowHeight;
@@ -171,7 +173,7 @@ int main(void)
 		       }
 		}  
 		//CALL UPDATE AND DISPLAY ...
-		//update();
+		update();
 		display();
 	}        
         Uninitialize();
@@ -374,6 +376,7 @@ void display()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glTranslatef(-1.5f, 0.0f, -6.0f);
+	glRotatef(angle,0.0f,1.0f,0.0f);
 	glBegin(GL_TRIANGLES);
 	//
 		glColor3f(1.0f, 0.0f, 0.0f);
@@ -390,7 +393,7 @@ void display()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glTranslatef(1.5f, 0.0f, -6.0f);
-
+	glRotatef(angle, -1.0f, 0.0f, 0.0f);
 	glBegin(GL_QUADS);
 
 		glColor3f(0.0f, 0.0f, 1.0f);
@@ -406,4 +409,9 @@ void display()
 	glEnd();	
 	glXSwapBuffers(gpdisplay, gWindow);
 	fprintf(gpfile,"Display END\n");
+}
+
+void update(void)
+{
+	angle=angle+0.05f;
 }
