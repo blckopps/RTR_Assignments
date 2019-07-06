@@ -118,8 +118,59 @@ int main(void)
 		                                        }       
 		                                                
 		                                break;
+		                                
+		                                case 0x30:	
+						case 0:    //0
+							resize(winWidth, winHeight);
+						break;
+						
+						case 0x31:
+						//case VK_NUMPAD1://1 LBH
+							glViewport(0, 0, (GLsizei)winWidth/2,(GLsizei)winHeight/2);
+						break;
+
+						case 0x32:
+						//case VK_NUMPAD2://2	RB
+							glViewport((GLsizei)winWidth/2,0 , (GLsizei)winWidth/2,(GLsizei)winHeight/2);
+						break;
+
+						case 0x33:
+						//case VK_NUMPAD3://3	RT
+							glViewport((GLsizei)winWidth/2, (GLsizei)winHeight/2, (GLsizei)winWidth/2,(GLsizei)winHeight/2);
+						break;
+
+						case 0x34:	
+						//case VK_NUMPAD4://4		LT
+							glViewport(0, (GLsizei)winHeight/2, (GLsizei)winWidth/2,(GLsizei)winHeight/2);
+						break;
+
+						case 0x35:
+							//case VK_NUMPAD5://5		LEFTHALF
+							glViewport(0, 0, (GLsizei)winWidth/2,(GLsizei)winHeight);
+						break;
+
+						case 0x36:
+							//case VK_NUMPAD6://6	RIGHTHALF
+							glViewport((GLsizei)winWidth/2, 0, (GLsizei)winWidth/2,(GLsizei)winHeight);
+						break;
+
+						case 0x37:
+							//case VK_NUMPAD7://7 LOWHALF
+							glViewport(0, 0, (GLsizei)winWidth,(GLsizei)winHeight/2);
+						break;
+
+						case 0x38:
+							//case VK_NUMPAD8://8 TOPHALF
+							glViewport(0,(GLsizei)winHeight/2 , (GLsizei)winWidth,(GLsizei)winHeight/2);
+						break;
+
+						case 0x39:	
+							//case VK_NUMPAD9://9
+							glViewport((GLsizei)winWidth/4,(GLsizei)winHeight/4 , (GLsizei)winWidth/2,(GLsizei)winHeight/2);
+						break;
+								        
 		                        }
-		                        //END
+		                        //LOOKUP:END
 		                                  
 		                break;
 		                
@@ -267,7 +318,7 @@ void CreateWindow(void)
                 Uninitialize();
                 exit(1);                       
          }                                             
-         XStoreName(gpdisplay, gWindow, "2D_Shapes");
+         XStoreName(gpdisplay, gWindow, "Multiple_ViewPorts");
          
          Atom windowManagerDelete = XInternAtom(gpdisplay, "WM_DELETE_WINDOW",True);
          XSetWMProtocols(gpdisplay, gWindow, &windowManagerDelete, 1);
@@ -356,12 +407,14 @@ void resize(int width, int height)
 		height = 1;
 	}
 	glViewport(0, 0, (GLsizei)width,(GLsizei)height);
-	glMatrixMode(GL_PROJECTION);
+
+	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	gluPerspective(45.0f,
 		(GLfloat)width/(GLfloat)height,	
 					0.1f,
 					100.0f);
+
 	fprintf(gpfile,"resize END\n");
 }
 
@@ -373,7 +426,7 @@ void display()
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glTranslatef(-1.5f, 0.0f, -6.0f);
+	//glTranslatef(0.0f, 0.0f, -1.0f);
 	glBegin(GL_TRIANGLES);
 	//
 		glColor3f(1.0f, 0.0f, 0.0f);
@@ -385,25 +438,8 @@ void display()
 		glColor3f(0.0f, 0.0f, 1.0f);
 		glVertex3f(1.0f, -1.0f, 0.0f);
 	glEnd();
-	/////////////QUAD////////
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glTranslatef(1.5f, 0.0f, -6.0f);
-
-	glBegin(GL_QUADS);
-
-		glColor3f(0.0f, 0.0f, 1.0f);
-
-		glVertex3f(1.0f, 1.0f, 0.0f);
-
-		glVertex3f(-1.0f, 1.0f, 0.0f);
 	
-		glVertex3f(-1.0f, -1.0f, 0.0f);
-	
-		glVertex3f(1.0f, -1.0f, 0.0f);
-
-	glEnd();	
 	glXSwapBuffers(gpdisplay, gWindow);
+	
 	fprintf(gpfile,"Display END\n");
 }

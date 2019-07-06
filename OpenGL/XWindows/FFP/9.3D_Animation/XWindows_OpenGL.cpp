@@ -269,7 +269,7 @@ void CreateWindow(void)
                 Uninitialize();
                 exit(1);                       
          }                                             
-         XStoreName(gpdisplay, gWindow, "Perspective");
+         XStoreName(gpdisplay, gWindow, "3D_Animation");
          
          Atom windowManagerDelete = XInternAtom(gpdisplay, "WM_DELETE_WINDOW",True);
          XSetWMProtocols(gpdisplay, gWindow, &windowManagerDelete, 1);
@@ -342,9 +342,16 @@ void initialize(void)
 	glXMakeCurrent( gpdisplay,
 			gWindow,
 			gGlxContext);
-			
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	//Depth related changes//
+	glShadeModel(GL_SMOOTH);
 
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+	//		
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearDepth(1.0f);
 	resize(giWindowWidth, giWindowHeight );
 
 			

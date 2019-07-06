@@ -2,7 +2,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<memory.h>
-
+#include<math.h>
 //xwindows headers
 #include<X11/Xlib.h>
 #include<X11/Xutil.h>
@@ -14,6 +14,7 @@
 #include<GL/glu.h>
 #include<GL/glx.h>
 
+#define num_points 1000
 //namespace
 using namespace std;
 
@@ -267,7 +268,7 @@ void CreateWindow(void)
                 Uninitialize();
                 exit(1);                       
          }                                             
-         XStoreName(gpdisplay, gWindow, "2D_Shapes");
+         XStoreName(gpdisplay, gWindow, "Static_DH");
          
          Atom windowManagerDelete = XInternAtom(gpdisplay, "WM_DELETE_WINDOW",True);
          XSetWMProtocols(gpdisplay, gWindow, &windowManagerDelete, 1);
@@ -369,41 +370,50 @@ void resize(int width, int height)
 void display()
 {
 	fprintf(gpfile,"Display START\n");
+	void circle();
+	void Triangle();
 	glClear(GL_COLOR_BUFFER_BIT);
-
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glTranslatef(-1.5f, 0.0f, -6.0f);
-	glBegin(GL_TRIANGLES);
-	//
-		glColor3f(1.0f, 0.0f, 0.0f);
-		glVertex3f(0.0f, 1.0f,0.0f);
-
-		glColor3f(0.0f, 1.0f, 0.0f);
-		glVertex3f(-1.0f, -1.0f, 0.0f);
-
-		glColor3f(0.0f, 0.0f, 1.0f);
-		glVertex3f(1.0f, -1.0f, 0.0f);
-	glEnd();
-	/////////////QUAD////////
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glTranslatef(1.5f, 0.0f, -6.0f);
-
-	glBegin(GL_QUADS);
-
-		glColor3f(0.0f, 0.0f, 1.0f);
-
-		glVertex3f(1.0f, 1.0f, 0.0f);
-
-		glVertex3f(-1.0f, 1.0f, 0.0f);
+	glTranslatef(0.0f,0.0f,-3.0f);
+	Triangle();
+	circle();
 	
-		glVertex3f(-1.0f, -1.0f, 0.0f);
-	
-		glVertex3f(1.0f, -1.0f, 0.0f);
-
-	glEnd();	
 	glXSwapBuffers(gpdisplay, gWindow);
 	fprintf(gpfile,"Display END\n");
+}
+
+void Triangle()
+{
+	glBegin(GL_LINES);
+	glVertex2f(0.0f,1.0f);
+	glVertex2f(-1.0f,-1.0f);
+
+	glVertex2f(-1.0f,-1.0f);
+	glVertex2f(1.0f,-1.0f);
+
+	glVertex2f(1.0f,-1.0f);
+	glVertex2f(0.0f,1.0f);
+
+	glVertex2f(0.0f,1.0f);
+	glVertex2f(0.0f,-1.0f);
+	glEnd();
+}
+
+void circle()
+{
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glTranslatef(0.0f, 0.0f, -3.0f);
+	
+	glBegin(GL_LINE_LOOP);
+	glColor3f(1.0f, 1.0f,0.0f);
+	for(int i=0;i<num_points;i++)
+	{
+		float deg=i*2.0f*3.14159/num_points;
+
+		glVertex2f((0.618f*cos(deg))+0.0f, (0.618f*sin(deg))-0.382f);
+	}
+
+	glEnd();
 }

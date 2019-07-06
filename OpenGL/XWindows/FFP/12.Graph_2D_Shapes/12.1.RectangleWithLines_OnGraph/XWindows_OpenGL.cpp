@@ -267,7 +267,7 @@ void CreateWindow(void)
                 Uninitialize();
                 exit(1);                       
          }                                             
-         XStoreName(gpdisplay, gWindow, "2D_Shapes");
+         XStoreName(gpdisplay, gWindow, "Graph_Paper");
          
          Atom windowManagerDelete = XInternAtom(gpdisplay, "WM_DELETE_WINDOW",True);
          XSetWMProtocols(gpdisplay, gWindow, &windowManagerDelete, 1);
@@ -358,10 +358,6 @@ void resize(int width, int height)
 	glViewport(0, 0, (GLsizei)width,(GLsizei)height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(45.0f,
-		(GLfloat)width/(GLfloat)height,	
-					0.1f,
-					100.0f);
 	fprintf(gpfile,"resize END\n");
 }
 
@@ -369,41 +365,55 @@ void resize(int width, int height)
 void display()
 {
 	fprintf(gpfile,"Display START\n");
+	float x=-1.0f;
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glTranslatef(-1.5f, 0.0f, -6.0f);
-	glBegin(GL_TRIANGLES);
-	//
-		glColor3f(1.0f, 0.0f, 0.0f);
-		glVertex3f(0.0f, 1.0f,0.0f);
+	glPointSize(0.5f);
 
-		glColor3f(0.0f, 1.0f, 0.0f);
-		glVertex3f(-1.0f, -1.0f, 0.0f);
+	glBegin(GL_LINES);
+	for(int i=0;i<40;i++)
+	{
+		glColor3f(0.0f,1.0f,0.0f);
 
-		glColor3f(0.0f, 0.0f, 1.0f);
-		glVertex3f(1.0f, -1.0f, 0.0f);
+		if(i==20)
+		{
+			glColor3f(0.0f,0.0f,1.0f);
+		}
+		
+		glVertex3f(1.0f, x,0.0f);
+		glVertex3f(-1.0f, x,0.0f);
+		
+		glVertex3f(x,1.0f,0.0f);
+		glVertex3f(x,-1.0f,0.0f);
+		x=x+(0.05f);
+	}
 	glEnd();
-	/////////////QUAD////////
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glTranslatef(1.5f, 0.0f, -6.0f);
-
-	glBegin(GL_QUADS);
-
-		glColor3f(0.0f, 0.0f, 1.0f);
-
-		glVertex3f(1.0f, 1.0f, 0.0f);
-
-		glVertex3f(-1.0f, 1.0f, 0.0f);
+	glPointSize(1.0f);
 	
-		glVertex3f(-1.0f, -1.0f, 0.0f);
-	
-		glVertex3f(1.0f, -1.0f, 0.0f);
+	glBegin(GL_LINES);
 
-	glEnd();	
+	glColor3f(1.0f,0.0f,.0f);
+
+	glVertex3f(0.5f,0.5f,0.0f);
+	glVertex3f(-0.5f,0.5f,0.0f);
+
+	glVertex3f(-0.5f,0.5f,0.0f);
+	glVertex3f(-0.5f,-0.5f,0.0f);
+
+	glVertex3f(-0.5f,-0.5f,0.0f);
+	glVertex3f(0.5f,-0.5f,0.0f);
+
+	glVertex3f(0.5f,-0.5f,0.0f);
+	glVertex3f(0.5f,0.5f,0.0f);
+
+	glEnd();
+
+	
 	glXSwapBuffers(gpdisplay, gWindow);
 	fprintf(gpfile,"Display END\n");
 }
