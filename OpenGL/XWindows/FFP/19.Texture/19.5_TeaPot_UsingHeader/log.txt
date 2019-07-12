@@ -1,0 +1,6 @@
+CreateWindow StartCreateWindow ENDinitialize START
+resize END
+initialize END
+resize END
+resize END
+In uninitialize

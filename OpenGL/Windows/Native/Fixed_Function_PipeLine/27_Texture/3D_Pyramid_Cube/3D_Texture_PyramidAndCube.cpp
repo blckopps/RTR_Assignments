@@ -583,7 +583,7 @@ BOOL loadTexture(GLuint *texture, TCHAR imageresourceId[])
 			3,
 			bmp.bmWidth,
 			bmp.bmHeight,
-			GL_BGR_EXT,
+			GL_RGB_EXT,
 			GL_UNSIGNED_BYTE,
 			bmp.bmBits);
 
