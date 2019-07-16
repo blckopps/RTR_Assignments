@@ -106,7 +106,7 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpszCmdLine
 	}
 	else
 	{
-		fwprintf(gpfile,TEXT("Initialization Successful"),"%d",60);
+		fwprintf(gpfile,TEXT("Initialization Successful"));
 		
 	
 	}
@@ -372,7 +372,7 @@ int initialize(void)
 									iInfoLength,
 									&writtened,
 									szInfoLog);
-				fwprintf(gpfile,TEXT("ERROR:VERTEX SHADER:"),"%s",szInfoLog);
+				fwprintf(gpfile,TEXT("ERROR:VERTEX SHADER:%s"),szInfoLog);
 				free(szInfoLog);
 				uninitialize();
 				DestroyWindow(ghwnd);
@@ -422,7 +422,7 @@ int initialize(void)
 									iInfoLength,
 									&writtened,
 									szInfoLog);
-				fwprintf(gpfile,TEXT("ERROR:FRAGMENT SHADER:"),"%s",szInfoLog);
+				fwprintf(gpfile,TEXT("ERROR:FRAGMENT SHADER:%s"),szInfoLog);
 				free(szInfoLog);
 				uninitialize();
 				DestroyWindow(ghwnd);
@@ -467,7 +467,7 @@ int initialize(void)
 						&wr,
 						szInfoLog);
 
-					fwprintf(gpfile,TEXT("ERROR:SHADER LINK:"),"%s",szInfoLog);
+					fwprintf(gpfile,TEXT("ERROR:SHADER LINK:%s"),szInfoLog);
 					free(szInfoLog);
 					uninitialize();
 					DestroyWindow(ghwnd);
