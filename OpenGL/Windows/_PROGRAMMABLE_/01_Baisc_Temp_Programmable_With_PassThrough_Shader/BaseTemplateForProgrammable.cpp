@@ -381,7 +381,7 @@ int initialize(void)
 		}
 	}
 	//********************FRAGMENT SHADER*****************
-	gFragmentShaderObject = glCreateShader(GL_VERTEX_SHADER);
+	gFragmentShaderObject = glCreateShader(GL_FRAGMENT_SHADER);
 
 	//write vertex shader code
 	GLchar * fragmentShaderSourceCode = 
