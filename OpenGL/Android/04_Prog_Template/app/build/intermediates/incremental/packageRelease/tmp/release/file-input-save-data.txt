@@ -1,0 +1,7 @@
+#Internal package file, do not edit.
+#Tue Aug 20 19:59:45 IST 2019
+0.baseType=DIRECTORY
+0.base=E\:\\Android_OpenGL\\ProgTemplate\\app\\build\\intermediates\\dex\\release\\mergeDexRelease\\out
+0.path=classes.dex
+0.set=DEX
+count=1

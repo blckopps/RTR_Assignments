@@ -1,0 +1,4 @@
+#Tue Aug 20 19:59:31 IST 2019
+base.0=E\:\\Android_OpenGL\\ProgTemplate\\app\\build\\intermediates\\dex\\debug\\mergeDexDebug\\out
+path.0=classes.dex
+renamed.0=classes.dex
