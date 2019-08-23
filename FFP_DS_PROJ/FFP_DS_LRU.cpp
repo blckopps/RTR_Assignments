@@ -303,6 +303,7 @@ void toogle_screen(void)
 int initialize(void)
 {
 	void resize(int,int);
+	void toogle_screen(void);
 	unsigned int CreateOutlineFont(char *,int ,float);
 	PIXELFORMATDESCRIPTOR pfd;
 	int iPixelFormatIndex;
@@ -356,7 +357,7 @@ int initialize(void)
 
 	listBase = CreateOutlineFont(fontname, 1, 0.10f);
 	resize(WIN_WIDTH, WIN_HEIGHT);
-
+	toogle_screen();
 	return 0;
 }
 
