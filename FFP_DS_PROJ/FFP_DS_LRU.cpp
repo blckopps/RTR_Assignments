@@ -535,7 +535,24 @@ void insert_node(int colval)
 		temp->g=0.0f;
 		temp->b=1.0f;
 	}
-	
+	else if(colval == CYAN)
+	{
+		temp->r=0.0f;
+		temp->g=1.0f;
+		temp->b=1.0f;
+	}
+	else if(colval == MAG)
+	{
+		temp->r=1.0f;
+		temp->g=0.0f;
+		temp->b=1.0f;
+	}
+	else if(colval == YELLOW)
+	{
+		temp->r=1.0f;
+		temp->g=1.0f;
+		temp->b=0.0f;
+	}
 
 	
 	////////////////////////////////////////////
