@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.AMC.template">
 	<uses-sdk
-		android:targetSdkVersion = "23"
+		android:targetSdkVersion = "28"
 		android:minSdkVersion = "18" />
     <application
         

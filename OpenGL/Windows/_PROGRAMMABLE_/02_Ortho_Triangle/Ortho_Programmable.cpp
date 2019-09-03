@@ -511,7 +511,8 @@ int initialize(void)
 		}
 	///***POST LINKING GETTING UNIFORMS**
 	mvpUniform = glGetUniformLocation(gShaderProgramObject,
-										"u_mvp_matrix");
+		
+	//									"u_mvp_matrix");
 
 	fwprintf(gpfile,TEXT("Post link success!!\n"));
 	const GLfloat triangleVertices[]=

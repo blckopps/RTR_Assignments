@@ -1,0 +1,8 @@
+CreateWindow StartNumber of FBConfigs: 10
+CreateWindow ENDinitialize START
+Required context is  H/W render context
+resize END
+initialize END
+resize END
+resize END
+In uninitialize
