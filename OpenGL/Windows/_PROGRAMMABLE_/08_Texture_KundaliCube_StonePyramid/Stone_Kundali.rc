@@ -1,0 +1,3 @@
+#include"Stone_Kundali.h"
+IDBITMAP_STONE BITMAP Stone.bmp
+IDBITMAP_KUNDALI BITMAP Kundali.bmp
