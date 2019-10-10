@@ -511,8 +511,7 @@ int initialize(void)
 		}
 	///***POST LINKING GETTING UNIFORMS**
 	mvpUniform = glGetUniformLocation(gShaderProgramObject,
-		
-	//									"u_mvp_matrix");
+										"u_mvp_matrix");
 
 	fwprintf(gpfile,TEXT("Post link success!!\n"));
 	const GLfloat triangleVertices[]=
@@ -635,6 +634,60 @@ void display(void)
 
 void uninitialize(void)
 {
+	if (vbo)
+	{
+		glDeleteBuffers(1, &vbo);
+		vbo = 0;
+	}
+
+	if (vao)
+	{
+		glDeleteVertexArrays(1, &vao);
+		vao = 0;
+	}
+
+	//shader uninitialize code
+	GLsizei shaderCount;
+	GLsizei shaderNumber;
+
+	if (gShaderProgramObject)
+	{
+		glUseProgram(gShaderProgramObject);
+
+		glGetProgramiv(gShaderProgramObject,
+			GL_ATTACHED_SHADERS,
+			&shaderCount);
+
+
+		GLuint *pShaders = (GLuint*)malloc(sizeof(GLuint)*shaderCount);
+
+		if (pShaders)
+		{
+			glGetAttachedShaders(gShaderProgramObject,
+				shaderCount,
+				&shaderCount,
+				pShaders);
+
+			for (shaderNumber = 0; shaderNumber < shaderCount; shaderCount++)
+			{
+				glDetachShader(gShaderProgramObject,
+					pShaders[shaderNumber]);
+
+				glDeleteShader(pShaders[shaderNumber]);
+
+				pShaders[shaderNumber] = 0;
+			}
+			free(pShaders);
+		}
+
+		glDeleteProgram(gShaderProgramObject);
+
+		gShaderProgramObject = 0;
+
+		glUseProgram(0);
+
+	}
+
 
 	if(bFullScreen == true)
 	{

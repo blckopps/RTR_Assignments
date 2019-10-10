@@ -793,7 +793,7 @@ void display(void)
 	 rotationMatrix = mat4::identity();
 
 	 //Do transformations...
-	 modelViewMatrix = translate(-1.5f,0.0f,-6.0f);
+	 modelViewMatrix = translate(-2.5f,0.0f,-6.0f);
 	 rotationMatrix = rotate(angle_pyramid, 0.0f , 1.0f, 0.0f);
 
 	 modelViewProjectionMatrix = perspectiveProjectionMatrix  * modelViewMatrix;
@@ -826,7 +826,7 @@ void display(void)
 	 modelViewProjectionMatrix = mat4::identity();
 	 rotationMatrix = mat4::identity();
 
-	 modelViewMatrix = translate(2.5f, 0.0f, -6.0f);
+	 modelViewMatrix = translate(2.2f, 0.0f, -6.0f);
 	 rotationMatrix = rotate(angle_cube, 0.0f, 0.0f, 1.0f);
 	 rotationMatrix = rotationMatrix * rotate(angle_cube, 0.0f, 1.0f, 0.0f);
 	 rotationMatrix = rotationMatrix * rotate(angle_cube, 1.0f, 0.0f, 0.0f);
@@ -876,6 +876,83 @@ void display(void)
 
 void uninitialize(void)
 {
+	if (vbo_pyramid_color)
+	{
+		glDeleteBuffers(1, &vbo_pyramid_color);
+		vbo_pyramid_color = 0;
+	}
+
+	if (vbo_pyramid_position)
+	{
+		glDeleteBuffers(1, &vbo_pyramid_position);
+		vbo_pyramid_position = 0;
+	}
+
+	if (vbo_cube_color)
+	{
+		glDeleteBuffers(1, &vbo_cube_color);
+		vbo_cube_color = 0;
+	}
+
+	if (vbo_cube_position)
+	{
+		glDeleteBuffers(1, &vbo_cube_position);
+		vbo_cube_position = 0;
+	}
+
+	if (vao_cube)
+	{
+		glDeleteVertexArrays(1, &vao_cube);
+		vao_cube = 0;
+	}
+
+	if (vao_pyramid)
+	{
+		glDeleteVertexArrays(1, &vao_pyramid);
+		vao_pyramid = 0;
+	}
+
+	//shader uninitialize code
+	GLsizei shaderCount;
+	GLsizei shaderNumber;
+
+	if (gShaderProgramObject)
+	{
+		glUseProgram(gShaderProgramObject);
+
+		glGetProgramiv(gShaderProgramObject,
+			GL_ATTACHED_SHADERS,
+			&shaderCount);
+
+
+		GLuint *pShaders = (GLuint*)malloc(sizeof(GLuint)*shaderCount);
+
+		if (pShaders)
+		{
+			glGetAttachedShaders(gShaderProgramObject,
+				shaderCount,
+				&shaderCount,
+				pShaders);
+
+			for (shaderNumber = 0; shaderNumber < shaderCount; shaderCount++)
+			{
+				glDetachShader(gShaderProgramObject,
+					pShaders[shaderNumber]);
+
+				glDeleteShader(pShaders[shaderNumber]);
+
+				pShaders[shaderNumber] = 0;
+			}
+			free(pShaders);
+		}
+
+		glDeleteProgram(gShaderProgramObject);
+
+		gShaderProgramObject = 0;
+
+		glUseProgram(0);
+
+	}
 
 	if(bFullScreen == true)
 	{
