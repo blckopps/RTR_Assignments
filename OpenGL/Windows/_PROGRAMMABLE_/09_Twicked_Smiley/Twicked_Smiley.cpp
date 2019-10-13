@@ -796,7 +796,7 @@ void uninitialize(void)
 				&shaderCount,
 				pShaders);
 
-			for (shaderNumber = 0; shaderNumber < shaderCount; shaderCount++)
+			for (shaderNumber = 0; shaderNumber < shaderCount; shaderNumber++)
 			{
 				glDetachShader(gShaderProgramObject,
 					pShaders[shaderNumber]);

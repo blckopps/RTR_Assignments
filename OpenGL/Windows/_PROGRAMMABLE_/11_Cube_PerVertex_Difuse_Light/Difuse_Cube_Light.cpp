@@ -857,10 +857,10 @@ void uninitialize(void)
 	}
 
 	//shader uninitialize code
-	/*GLsizei shaderCount;
-	GLsizei shaderNumber;*/
+	GLsizei shaderCount;
+	GLsizei shaderNumber;
 
-	/*if (gShaderProgramObject)
+	if (gShaderProgramObject)
 	{
 		glUseProgram(gShaderProgramObject);
 
@@ -878,7 +878,7 @@ void uninitialize(void)
 				&shaderCount,
 				pShaders);
 
-			for (shaderNumber = 0; shaderNumber < shaderCount; shaderCount++)
+			for (shaderNumber = 0; shaderNumber < shaderCount; shaderNumber++)
 			{
 				glDetachShader(gShaderProgramObject,
 					pShaders[shaderNumber]);
@@ -896,7 +896,7 @@ void uninitialize(void)
 
 		glUseProgram(0);
 
-	}*/
+	}
 
 
 	if (bFullScreen == true)
