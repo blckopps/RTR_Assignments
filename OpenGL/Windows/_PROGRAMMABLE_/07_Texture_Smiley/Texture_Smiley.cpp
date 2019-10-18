@@ -38,7 +38,7 @@ GLuint texture_smiley;
 
 GLuint gShaderProgramObject;
 //declare vao's according to shapes
-GLuint vao_Triangle;
+
 GLuint vao_Rectangle;
 
 //declare vbo's according to Arrays(position,light etc)
@@ -484,12 +484,12 @@ int initialize(void)
 
 	//*** PRELINKING BINDING TO VERTEX ATTRIBUTES***
 	glBindAttribLocation(gShaderProgramObject,
-						AMC_ATTRIBUTES_POSITION,
-						"vPosition");
+			     AMC_ATTRIBUTES_POSITION,
+			     "vPosition");
 
 	glBindAttribLocation(gShaderProgramObject,
-						 AMC_ATTRIBUTES_TEXCOORD0,
-							"vTexcoord");
+			     AMC_ATTRIBUTES_TEXCOORD0,
+			        "vTexcoord");
 
 	//link above shader program
 	glLinkProgram(gShaderProgramObject);
