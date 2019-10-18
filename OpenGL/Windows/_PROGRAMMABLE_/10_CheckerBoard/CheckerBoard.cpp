@@ -727,6 +727,66 @@ void display(void)
 
 void uninitialize(void)
 {
+	if (vbo_Rectangle)
+	{
+		glDeleteBuffers(1, &vbo_Rectangle);
+		vbo_Rectangle = 0;
+	}
+
+	if (vbo_board_texture)
+	{
+		glDeleteBuffers(1, &vbo_board_texture);
+		vbo_board_texture = 0;
+	}
+
+	if (vao_Rectangle)
+	{
+		glDeleteVertexArrays(1, &vao_Rectangle);
+		vao_Rectangle = 0;
+	}
+
+
+	//shader uninitialize code
+	GLsizei shaderCount;
+	GLsizei shaderNumber;
+
+	if (gShaderProgramObject)
+	{
+		glUseProgram(gShaderProgramObject);
+
+		glGetProgramiv(gShaderProgramObject,
+			GL_ATTACHED_SHADERS,
+			&shaderCount);
+
+
+		GLuint *pShaders = (GLuint*)malloc(sizeof(GLuint)*shaderCount);
+
+		if (pShaders)
+		{
+			glGetAttachedShaders(gShaderProgramObject,
+				shaderCount,
+				&shaderCount,
+				pShaders);
+
+			for (shaderNumber = 0; shaderNumber < shaderCount; shaderNumber++)
+			{
+				glDetachShader(gShaderProgramObject,
+					pShaders[shaderNumber]);
+
+				glDeleteShader(pShaders[shaderNumber]);
+
+				pShaders[shaderNumber] = 0;
+			}
+			free(pShaders);
+		}
+
+		glDeleteProgram(gShaderProgramObject);
+
+		gShaderProgramObject = 0;
+
+		glUseProgram(0);
+
+	}
 
 	if(bFullScreen == true)
 	{
