@@ -489,7 +489,7 @@ int initialize(void)
 			"}" \
 			"else" \
 			"{" \
-				"fragColor = vec4(1.0, 0.0, 0.0 , 1.0);" \
+				"fragColor = vec4(1.0, 1.0, 1.0 , 1.0);" \
 			"}" \
 		"}";
 	//specify vertex source code to vetex shader object

@@ -494,7 +494,7 @@ int initialize(void)
 			"}" \
 			"else" \
 			"{" \
-				"phong_ads_light = vec3(1.0, 1.0, 0.0);" \
+				"phong_ads_light = vec3(1.0, 1.0, 1.0);" \
 			"}" \
 			"gl_Position = u_projection_matrix * u_view_matrix * u_model_matrix * vPosition;" \
 		" } ";
