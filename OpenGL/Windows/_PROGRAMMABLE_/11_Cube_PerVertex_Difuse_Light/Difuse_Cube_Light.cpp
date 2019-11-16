@@ -487,9 +487,9 @@ int initialize(void)
 		"}";
 	//specify vertex source code to vetex shader object
 	glShaderSource(gFragmentShaderObject,
-		1,
-		(GLchar **)&fragmentShaderSourceCode,
-		NULL);
+		                1,
+		                (GLchar **)&fragmentShaderSourceCode,
+		                NULL);
 	//compile vertex shader code
 	glCompileShader(gFragmentShaderObject);
 
