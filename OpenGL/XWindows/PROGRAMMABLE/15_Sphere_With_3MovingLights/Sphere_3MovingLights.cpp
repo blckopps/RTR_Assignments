@@ -1,48 +1,61 @@
-#include<Windows.h>
+#include<iostream>
 #include<stdio.h>
-#include<gl/glew.h>
-#include<gl/GL.h>
+#include<stdlib.h>
+#include<memory.h>
+#include<GL/glew.h>
+
+//xwindows headers
+#include<X11/Xlib.h>
+#include<X11/Xutil.h>
+#include<X11/XKBlib.h>
+#include<X11/keysym.h>
 #include"vmath.h"
 
+//OpenGL headers
+#include<GL/gl.h>
+#include<GL/glu.h>
+#include<GL/glx.h>
 #include"Sphere.h"
-
+//#pragma comment(lib,"Sphere.lib")
+//namespace
+using namespace std;
 using namespace vmath;
 
-#pragma comment(lib,"openGL32.lib")
-#pragma comment(lib,"glew32.lib")
-#pragma comment(lib,"Sphere.lib")
+//global variables
 
 
-#define WIN_WIDTH 800
-#define WIN_HEIGHT 600
+Display *gpdisplay = NULL;
+XVisualInfo *gpXVisualInfo  = NULL;
+Colormap gColormap;
+Window gWindow;
 
-FILE *gpfile = NULL;
+int giWindowWidth = 600;
+int giWindowHeight = 800;
 
-LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-
-enum
-{
-	AMC_ATTRIBUTES_POSITION = 0,
-	AMC_ATTRIBUTES_COLOR,
-	AMC_ATTRIBUTES_NORMAL,
-	AMC_ATTRIBUTES_TEXCOORD0
-};
-
-//GLOBAL VARIABLES
+//
 bool bFullScreen = false;
-DWORD dwstyle;
-WINDOWPLACEMENT wpPrev = { sizeof(WINDOWPLACEMENT) };
-HWND ghwnd = NULL;
-bool gbActiveWindow = false;
-HDC ghdc = NULL;
-HGLRC ghrc = NULL;
-
+bool bIsLighting = false;
+bool bIsAnimation = false;
 GLfloat angle_X = 0.0f;
 
-//Shader program objects
+typedef GLXContext (* glXCreateContextAttribsARBProc)(Display *,
+						     GLXFBConfig,
+						     GLXContext,
+						     Bool,
+						     const int *);
+
+glXCreateContextAttribsARBProc glXCreateContextAttribsARB = NULL;
+
+GLXFBConfig gGlxFBConfig;
+GLXContext gGlxContext;
+
+//shaders object
+GLuint gVertexShaderObject;
+GLuint gFragmentShaderObject;
+
 GLuint gShaderProgramObject_PV;
 GLuint gShaderProgramObject_PF;
-//vao vbo
+
 GLuint vao_sphere;
 GLuint vbo_position_vbo;
 GLuint vbo_normals_vbo;
@@ -56,7 +69,6 @@ GLuint projectionUniform_PV;
 GLuint modelMatrixUniform_PF;
 GLuint viewMatrixUniform_PF;
 GLuint projectionUniform_PF;
-
 mat4 perspectiveProjectionMatrix;
 
 /////////////*******shader uniforms for per vertex*******///////////////////
@@ -86,8 +98,6 @@ GLuint kaUniform_PV;
 GLuint kdUniform_PV;
 GLuint ksUniform_PV;
 
-
-
 ////////////******shader uniforms for per fragment****/////////////
 GLuint isLKeyIsPressedUniforms_PF;
 GLuint shininessUniform_PF;
@@ -108,22 +118,11 @@ GLuint laUniform_PF_BLUE;
 GLuint ldUniform_PF_BLUE;
 GLuint lsUniform_PF_BLUE;
 
-GLuint lightPositionUniform_PF_BLUE;;
-//Material Per Fragment
 GLuint kaUniform_PF;
 GLuint kdUniform_PF;
 GLuint ksUniform_PF;
-//
-bool isLighting = false;
-bool isPerVertex = true;
-bool isPerFragment = false;
 
-//sphere var
-float sphere_vertices[1146];
-float sphere_normals[1146];
-float sphere_textures[764];
-unsigned short sphere_elements[2280];
-GLsizei gNumVertices, gNumElements;
+GLuint lightPositionUniform_PF_BLUE;;
 
 //light array Red
 float lightAmbient_Red[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
@@ -150,309 +149,526 @@ float lightPosition_Blue[4];
 
 float materialShininess = 50.0f;
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLine, int iCmdShow)
+
+bool isLighting = false;
+bool isPerVertex = true;
+bool isPerFragment = false;
+//sphere var
+float sphere_vertices[1146];
+float sphere_normals[1146];
+float sphere_textures[764];
+unsigned short sphere_elements[2280];
+GLsizei gNumVertices, gNumElements;
+//enum
+enum
 {
-	//FUnction declaration
-	int initialize(void);
+	AMC_ATTRIBUTES_POSITION = 0,
+	AMC_ATTRIBUTES_COLOR, 
+	AMC_ATTRIBUTES_NORMAL, 
+	AMC_ATTRIBUTES_TEXCOORD0 
+};
+
+FILE *gpfile = NULL;
+
+//static GLXContext gGlxContext;
+
+//entry point function
+int main(void)
+{
+	gpfile = fopen( "log.txt","w");
+        if(gpfile == NULL)
+	{
+		printf("ERROR: creating log file\n");
+		exit(0);
+	
+	}
+     //function prototype
+        void CreateWindow(void);
+        void Uninitialize(void);
+        void ToogleFullScreen(void);
+        void update(void);
+	//OpenGL Functions proto..
+	void initialize(void);
+	void resize(int, int);
 	void display(void);
-	void update();
-
-	//variable decl
-	int iret = 0;
-	bool bdone = false;
-
-	WNDCLASSEX wndclass;
-	HWND hwnd;
-	MSG msg;
-	TCHAR szAppName[] = TEXT("MYWINDOW ");
-
-	if (fopen_s(&gpfile, "log.txt", "w") != 0)
-	{
-		MessageBox(NULL, TEXT("Cant create log"), TEXT("ERROR!!!"), MB_OK);
-
-	}
-	else
-	{
-		fwprintf(gpfile, TEXT("log file created\n"));
-	}
-
-	wndclass.cbSize = sizeof(WNDCLASSEX);
-	wndclass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-	wndclass.cbClsExtra = 0;
-	wndclass.cbWndExtra = 0;
-	wndclass.lpfnWndProc = WndProc;
-	wndclass.hInstance = hInstance;
-	wndclass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-	wndclass.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wndclass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
-	wndclass.lpszClassName = szAppName;
-	wndclass.lpszMenuName = NULL;
-	wndclass.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
-
-	RegisterClassEx(&wndclass);
-
-	//create window
-
-	hwnd = CreateWindowEx(WS_EX_APPWINDOW,
-		szAppName,
-		TEXT("SPHERE_PV_PF-SHUBHAM"),
-		WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPCHILDREN | WS_VISIBLE,
-		100,
-		100,
-		WIN_WIDTH,
-		WIN_HEIGHT,
-		NULL,
-		NULL,
-		hInstance,
-		NULL);
-	ghwnd = hwnd;
-	iret = initialize();
-	//handling return values and create log
-	if (iret == -1)
-	{
-		fwprintf(gpfile, TEXT("CHoice pixel format failed!!\n"));
-		DestroyWindow(hwnd);
-	}
-	else if (iret == -2)
-	{
-		fwprintf(gpfile, TEXT("SetPixelFormat failed!! \n"));
-		DestroyWindow(hwnd);
-	}
-	else if (iret == -3)
-	{
-		fwprintf(gpfile, TEXT("create context failed\n"));
-		DestroyWindow(hwnd);
-	}
-	else if (iret == -4)
-	{
-		fwprintf(gpfile, TEXT("wgl make current failed!!\n"));
-		DestroyWindow(hwnd);
-
-	}
-	else
-	{
-		fwprintf(gpfile, TEXT("Initialization Successful"));
-
-
-	}
-
-	ShowWindow(hwnd, iCmdShow);
-	SetForegroundWindow(hwnd);
-	SetFocus(hwnd);
-	//call in game loop UpdateWindow(hwnd);
-
-	while (bdone == false)
-	{
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+	
+	
+        //variabal 
+        int winWidth = giWindowWidth;
+        int winHeight =  giWindowHeight;
+        bool bDone = false;
+        char keys[26];
+        //code
+        CreateWindow();
+        
+        initialize();
+        //MessageLoop 
+        XEvent event;
+        KeySym keysym;
+        while(!bDone)
+        {
+		while(XPending(gpdisplay))
 		{
-			if (msg.message == WM_QUIT)
-			{
-				bdone = true;
-			}
-			else
-			{
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
+		       XNextEvent(gpdisplay, &event); 
+		       
+		       switch(event.type)
+		       {
+		                case MapNotify:
+		                
+		                break;
+		                
+		                case KeyPress:
+		                        keysym = XkbKeycodeToKeysym(gpdisplay, event.xkey.keycode, 0, 0);
+		                        
+		                        switch(keysym)
+		                        {
+		                                
+		                                case XK_Escape:
+		                                	if(bFullScreen == false)
+		                                        {
+		                                                ToogleFullScreen();
+		                                                bFullScreen = true;
+		                                        }
+		                                        else
+		                                        {
+		                                                ToogleFullScreen();
+		                                                bFullScreen = false;
+		                                        }   
+		                                        
+		                                break;
+		                                
+		                                default:
+		                                
+		                                break;
+		                                
+		                                
+		                        } 
+		                        //LOOKUP
+		                        //START:
+		                        XLookupString( &event.xkey,
+		                        		keys,
+		                        		sizeof(keys),
+		                        		NULL,
+		                        		NULL);
+		                        
+		                        switch(keys[0])
+		                        {
+		                        		case 'f':
+		                                case 'F':
+		                                
+					                        if (isPerFragment == false)
+											{
+												isPerFragment = true;
 
+												isPerVertex = false;
+
+											}   
+		                                                
+		                                break;
+		                                
+		                                case 'l':
+		                                case 'L':
+			                                if (isLighting == false)
+			                                {
+				                                isLighting = true;
+
+			                                }
+			                                else
+			                                {
+				                                isLighting = false;
+			                                }
+			                                break;
+			                                
+			                                case 'v':
+											case 'V':
+												if (isPerVertex == false)
+												{
+													isPerVertex = true;
+													isPerFragment = false;
+
+												}
+												break;
+
+											case 'q':
+											case 'Q':
+												bDone = true;
+		                                        Uninitialize();
+		                                        exit(0);
+											break;
+		                                                                
+		                        }
+		                                                        //END
+		                                                                  
+		                        break;
+		                
+		                case ButtonPress:
+		                        switch(event.xbutton.button)
+		                        {
+		                                case 1:         //LEFT MOUSE BUTTON
+		                                break;
+		                                
+		                                case 2:         //MIDLE SCROLL BUTTON
+		                                
+		                                break;
+		                                
+		                                case 3:         //RIGHT MOUSE BUTTON
+		                                
+		                                break;
+		                        }
+		                break;
+		                
+		                case MotionNotify:              //WM_MOUSE_MOVE
+		                        
+		                break;
+		                
+		                case ConfigureNotify:
+		                        winWidth = event.xconfigure.width;
+		                        
+		                        winHeight = event.xconfigure.height;
+		                        
+		                        resize(winWidth, winHeight);				//RESIZE
+		                break;
+		                
+		                case Expose:                    //WM_PAINT
+		                        
+		                break;
+		                
+		                case DestroyNotify:
+		                        
+		                break;
+		                
+		                case 33:
+		                	bDone = true;
+		                        Uninitialize();
+		                        exit(0);                                     
+		                break;
+		                
+		                default:
+		                
+		                break;
+		       }
+		}  
+		//CALL UPDATE AND DISPLAY ...
+		
+		display();
+		update();
+	}        
+        Uninitialize();
+        fprintf(gpfile,"uninitialize call 178");
+        exit(0);
+        
+}
+
+///
+void CreateWindow(void)
+{
+	fprintf(gpfile,"CreateWindow Start");
+	//variables
+	GLXFBConfig *pGlxFBConfig = NULL;
+	GLXFBConfig bestGlxFBConfig;
+	XVisualInfo *pTempXVisualInfo = NULL;
+	int iNumberOfFBConfigs = 0;
+        //function prototypes
+        void Uninitialize();
+        
+        //variables
+        XSetWindowAttributes winattribs;
+        int defaultScreen;
+        int defaultDepth;
+        int styleMask;
+        
+        static int frameBufferAttributes[] = 
+        {
+        	GLX_X_RENDERABLE, True,
+        	GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
+        	GLX_RENDER_TYPE, GLX_RGBA_BIT,
+        	GLX_X_VISUAL_TYPE, GLX_TRUE_COLOR,
+        	GLX_DOUBLEBUFFER, True,
+        	GLX_RED_SIZE, 8,
+        	GLX_GREEN_SIZE,8,
+        	GLX_BLUE_SIZE,8,
+        	GLX_ALPHA_SIZE,8,
+        	GLX_DEPTH_SIZE,24,
+        	GLX_STENCIL_SIZE,8,
+        	None
+        	
+        };
+        //Code
+        gpdisplay = XOpenDisplay(NULL);                 //NULL for defaault display
+        if(gpdisplay == NULL)
+        {
+                printf("ERROR:UNABLE TO OPEN CONNECTION.....\n");
+                fprintf(gpfile,"call from 212\n");
+                Uninitialize();
+                
+                exit(1);
+        }
+        
+        defaultScreen = XDefaultScreen(gpdisplay);
+        
+        defaultDepth = DefaultDepth(gpdisplay, defaultScreen);	//No Need now...
+        
+        //Retrive all FBConfig driver has
+        pGlxFBConfig = glXChooseFBConfig(gpdisplay,
+        				 defaultScreen,
+        				 frameBufferAttributes,
+        				 &iNumberOfFBConfigs);
+        
+        fprintf(gpfile,"Number of FBConfigs: %d\n",iNumberOfFBConfigs);
+        
+        int bestFrameBufferConfig = -1;
+        int bestNumberOfSamples = -1;
+        int worstFrameBufferConfig = -1;
+        int worstNumberOfSamples = 999;
+        
+        for(int i=0; i < iNumberOfFBConfigs; i++)
+        {
+        	//for each FBCongig get temporary visual info it is just used to check
+        	//capability..
+        	pTempXVisualInfo = glXGetVisualFromFBConfig( gpdisplay,
+        						     pGlxFBConfig[i]);
+        						     
+		if(pTempXVisualInfo)
+		{
+			//Get number of sample buffers from respective FBConfig
+			int sampleBuffers, samples;
+			
+			glXGetFBConfigAttrib(gpdisplay,
+					     pGlxFBConfig[i],
+					     GLX_SAMPLE_BUFFERS,
+					     &sampleBuffers);
+					     
+			//get number of samples from respective
+			glXGetFBConfigAttrib(gpdisplay,
+					     pGlxFBConfig[i],
+					     GLX_SAMPLES,
+					     &samples);
+					     
+			//more number of samples, sampleBuffers more eligible Fbconfig is..
+			
+			if(bestFrameBufferConfig < 0 ||
+			   sampleBuffers && samples > bestNumberOfSamples)
+			{
+				bestFrameBufferConfig = i;
+				bestNumberOfSamples = samples;
 			}
+			if(worstFrameBufferConfig < 0 ||
+			   !sampleBuffers || samples < worstNumberOfSamples)
+			{
+				worstFrameBufferConfig = i;
+				worstNumberOfSamples = samples;
+			}
+		}
+		XFree(pTempXVisualInfo);
+        }
+        
+        //Now assign found best one...
+        bestGlxFBConfig = pGlxFBConfig[bestFrameBufferConfig];
+        
+        gGlxFBConfig = bestGlxFBConfig;
+        
+        XFree(pGlxFBConfig);
+        
+        
+        //>>
+        gpXVisualInfo = glXGetVisualFromFBConfig(gpdisplay,
+        					 bestGlxFBConfig);
+        if(gpXVisualInfo == NULL)
+        {
+        	printf("ERROR:glxChoiceVisual failed...Exiting...");
+        	fprintf(gpfile,"call from 227\ns");
+        	Uninitialize();
+        	exit(0);
+        }
+        
+        //>>
+        winattribs.border_pixel = 0;
+        winattribs.background_pixmap = 0;
+        winattribs.colormap = XCreateColormap(gpdisplay,
+                                              RootWindow(gpdisplay, gpXVisualInfo->screen),
+                                              gpXVisualInfo->visual,
+                                              AllocNone);       //dont allocate mem for color map,we saved it on below line
+        gColormap =   winattribs.colormap;                                   
+        winattribs.background_pixel = BlackPixel(gpdisplay, defaultScreen);
+        
+        
+        winattribs.event_mask = ExposureMask | VisibilityChangeMask |
+                                ButtonPressMask | KeyPressMask | PointerMotionMask |
+                                StructureNotifyMask;
+                                
+        styleMask = CWBorderPixel | CWBackPixel | CWEventMask | CWColormap;
+        
+        gWindow = XCreateWindow(gpdisplay,
+                                RootWindow(gpdisplay, gpXVisualInfo->screen),
+                                0,
+                                0,
+                                giWindowWidth,
+                                giWindowHeight,
+                                0,
+                                gpXVisualInfo->depth,
+                                InputOutput,
+                                gpXVisualInfo->visual,
+                                styleMask,
+                                &winattribs);
+                                
+         if(!gWindow)
+         {
+                printf("ERROR: XCreateWiow Failed....");
+                fprintf(gpfile,"call from 264\n");
+                Uninitialize();
+                exit(1);                       
+         }                                             
+         XStoreName(gpdisplay, gWindow, "SPHERE 3 MOVING LIGHTS");
+         
+         Atom windowManagerDelete = XInternAtom(gpdisplay, "WM_DELETE_WINDOW",True);
+         XSetWMProtocols(gpdisplay, gWindow, &windowManagerDelete, 1);
+         
+         XMapWindow(gpdisplay, gWindow);
+         fprintf(gpfile,"CreateWindow END");
+}
+
+void ToogleFullScreen(void)
+{
+        //variables
+        Atom wm_state;
+        Atom fullscreen;
+        XEvent xev ={0};
+        
+        //code
+        wm_state = XInternAtom(gpdisplay, "_NET_WM_STATE",False);
+        memset(&xev, 0, sizeof(xev));
+        
+        xev.type = ClientMessage;
+        xev.xclient.window = gWindow;
+        xev.xclient.message_type = wm_state;
+        xev.xclient.format = 32;
+        xev.xclient.data.l[0] = bFullScreen ? 0 :1;
+        
+        fullscreen = XInternAtom(gpdisplay, "_NET_WM_STATE_FULLSCREEN",False);
+        xev.xclient.data.l[1] = fullscreen;
+        
+        XSendEvent(gpdisplay,
+                   RootWindow(gpdisplay, gpXVisualInfo->screen),
+                   False,
+                   StructureNotifyMask,
+                   &xev);
+}
+
+void Uninitialize(void)
+{
+	fprintf(gpfile,"In uninitialize\n");
+
+	int uninitialize2(GLuint);
+
+	if (vbo_element_vbo)
+	{
+		glDeleteBuffers(1, &vbo_element_vbo);
+		vbo_element_vbo = 0;
+	}
+
+	if (vbo_normals_vbo)
+	{
+		glDeleteVertexArrays(1, &vbo_normals_vbo);
+		vbo_normals_vbo = 0;
+	}
+
+	if (vbo_position_vbo)
+	{
+		glDeleteVertexArrays(1, &vbo_position_vbo);
+		vbo_position_vbo = 0;
+	}
+	//	////shader uninitialize code
+	int ret = 0;
+
+	ret = uninitialize2(gShaderProgramObject_PV);
+	ret = uninitialize2(gShaderProgramObject_PF);
+
+	if (ret != 0)
+	{
+		fprintf(gpfile, "\nFaild uninitialize2\n");
+	}
+	else
+	{
+		fprintf(gpfile, " \nuninitialize2 successfull\n");
+	}
+
+
+	
+        if(gWindow)
+        {
+                XDestroyWindow(gpdisplay, gWindow);
+        }
+        if(gColormap)
+        {
+               XFreeColormap(gpdisplay, gColormap);
+        }
+        if(gpXVisualInfo)
+        {
+                free(gpXVisualInfo);
+                gpXVisualInfo = NULL;
+        }
+        if(gpdisplay)
+        {
+                XCloseDisplay(gpdisplay);
+                gpdisplay = NULL;
+        }
+}
+
+int uninitialize2(GLuint shaderObject)
+{
+	GLsizei shaderCount;
+	GLsizei shaderNumber;
+
+	if (shaderObject)
+	{
+		glUseProgram(shaderObject);
+
+		glGetProgramiv(shaderObject,
+			GL_ATTACHED_SHADERS,
+			&shaderCount);
+
+
+		GLuint *pShaders = (GLuint*)malloc(sizeof(GLuint)*shaderCount);
+
+		if (pShaders)
+		{
+			glGetAttachedShaders(shaderObject,
+				shaderCount,
+				&shaderCount,
+				pShaders);
+
+			for (shaderNumber = 0; shaderNumber < shaderCount; shaderNumber++)
+			{
+				glDetachShader(shaderObject,
+					pShaders[shaderNumber]);
+
+				glDeleteShader(pShaders[shaderNumber]);
+
+				pShaders[shaderNumber] = 0;
+			}
+			free(pShaders);
 		}
 		else
 		{
-			if (gbActiveWindow == true)
-			{
-				//here call update
-				update();
-			}
-			display();
-
+			fprintf(gpfile, "\nUninitialize2 : Failed to alloc memory\n");
+			return 1;
 		}
 
+		glDeleteProgram(shaderObject);
+
+		shaderObject = 0;
+
+		glUseProgram(0);
 	}
-	return((int)msg.wParam);
-
-
+	return 0;
 }
-LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
+//
+void initialize(void)
 {
-	//FUnction Declarations
+	fprintf(gpfile,"initialize START\n");
+	void Uninitialize(void);
 	void resize(int, int);
 	
-
-	void uninitialize(void);
-
-	void toogle_screen(void);
-
-	switch (iMsg)
-	{
-
-	case WM_CHAR:
-		switch (wParam)
-		{
-		case 'l':
-		case 'L':
-			if (isLighting == false)
-			{
-				isLighting = true;
-
-			}
-			else
-			{
-				isLighting = false;
-			}
-			break;
-		case 'f':
-		case 'F':
-			if (isPerFragment == false)
-			{
-				isPerFragment = true;
-
-				isPerVertex = false;
-
-			}
-			break;
-
-		case 'v':
-		case 'V':
-			if (isPerVertex == false)
-			{
-				isPerVertex = true;
-				isPerFragment = false;
-
-			}
-			break;
-		case 'q':
-		case 'Q':
-			if (bFullScreen == true)				//We should exit from fullscreen and then destroy the window.
-			{
-				SetWindowLong(ghwnd,
-					GWL_STYLE,
-					dwstyle |
-					WS_OVERLAPPEDWINDOW);
-
-				SetWindowPlacement(ghwnd, &wpPrev);
-
-				SetWindowPos(ghwnd,
-					HWND_TOP,
-					0, 0, 0, 0,
-					SWP_NOZORDER |
-					SWP_FRAMECHANGED |
-					SWP_NOMOVE |
-					SWP_NOSIZE |
-					SWP_NOOWNERZORDER);
-
-				ShowCursor(TRUE);
-			}
-			DestroyWindow(hwnd);
-
-			break;
-
-		default:
-			break;
-		}
-		break;
-
-
-	case WM_KEYDOWN:
-
-		switch (wParam)
-		{
-		case VK_ESCAPE:
-
-			toogle_screen();
-
-			break;
-
-		}
-
-		break;
-	case WM_SETFOCUS:
-		gbActiveWindow = true;
-		break;
-
-	case WM_KILLFOCUS:
-		gbActiveWindow = false;
-		break;
-
-	case WM_SIZE:
-		resize(LOWORD(lParam), HIWORD(lParam));
-		break;
-
-	case WM_CLOSE:
-
-		DestroyWindow(hwnd);
-		break;
-
-	case WM_ERASEBKGND:
-		return 0;
-
-	case WM_DESTROY:
-		
-		uninitialize();
-		PostQuitMessage(0);
-		break;
-	}
-	return(DefWindowProc(hwnd, iMsg, wParam, lParam));
-}
-//User Defined Functions
-
-void toogle_screen(void)
-{
-	//MONITORINFO mi;
-
-
-	if (bFullScreen == false)
-	{
-		dwstyle = GetWindowLong(ghwnd, GWL_STYLE);
-
-		if (dwstyle & WS_OVERLAPPEDWINDOW)
-		{
-			MONITORINFO	mi = { sizeof(MONITORINFO) };
-
-			if (GetWindowPlacement(ghwnd, &wpPrev) && GetMonitorInfo(MonitorFromWindow(ghwnd, MONITORINFOF_PRIMARY), &mi))
-			{
-				SetWindowLong(ghwnd, GWL_STYLE, dwstyle&~WS_OVERLAPPEDWINDOW);
-
-				SetWindowPos(ghwnd,
-					HWND_TOP,
-					mi.rcMonitor.left,
-					mi.rcMonitor.top,
-					mi.rcMonitor.right - mi.rcMonitor.left,
-					mi.rcMonitor.bottom - mi.rcMonitor.top,
-					SWP_NOZORDER | SWP_FRAMECHANGED);
-
-			}
-		}
-		ShowCursor(FALSE);
-		bFullScreen = true;
-	}
-	else
-	{
-		SetWindowLong(ghwnd,
-			GWL_STYLE,
-			dwstyle |
-			WS_OVERLAPPEDWINDOW);
-
-		SetWindowPlacement(ghwnd, &wpPrev);
-
-		SetWindowPos(ghwnd,
-			HWND_TOP,
-			0, 0, 0, 0,
-			SWP_NOZORDER |
-			SWP_FRAMECHANGED |
-			SWP_NOMOVE |
-			SWP_NOSIZE |
-			SWP_NOOWNERZORDER);
-
-		ShowCursor(TRUE);
-		bFullScreen = false;
-	}
-}
-
-int initialize(void)
-{
-	void resize(int, int);
-	void uninitialize(void);
-
 	//shader objects for per vertex and per fragment
 	GLuint gVertexShaderObject_PV;
 	GLuint gVertexShaderObject_PF;
@@ -460,59 +676,77 @@ int initialize(void)
 	GLuint gFragmentShaderObject_PV;
 	GLuint gFragmentShaderObject_PF;
 
-	PIXELFORMATDESCRIPTOR pfd;
-	int iPixelFormatIndex;
 	GLenum result;
-	//code
-	ZeroMemory(&pfd, sizeof(PPIXELFORMATDESCRIPTOR));
-	pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
-	pfd.nVersion = 1;
-	pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
-	pfd.iPixelType = PFD_TYPE_RGBA;
-	pfd.cColorBits = 32;
-	pfd.cRedBits = 8;
-	pfd.cGreenBits = 8;
-	pfd.cBlueBits = 8;
-	pfd.cAlphaBits = 8;
-	pfd.cDepthBits = 32;
-	ghdc = GetDC(ghwnd);
-	iPixelFormatIndex = ChoosePixelFormat(ghdc, &pfd);
+	
+	glXCreateContextAttribsARB = (glXCreateContextAttribsARBProc)glXGetProcAddressARB((GLubyte *) "glXCreateContextAttribsARB");
+	
+	if(glXCreateContextAttribsARB == NULL)
+	{
+		fprintf(gpfile,"glXCreateContextAttribARB is NULL\n");
+		printf("glXCreateContextAttribARB is null Exiting..\n");
+		Uninitialize();
+		exit(0);	
+	}
 
+	const int attribs[] = {
+			  	GLX_CONTEXT_MAJOR_VERSION_ARB,4,
+			  	GLX_CONTEXT_MINOR_VERSION_ARB,5,
+			  	GLX_CONTEXT_PROFILE_MASK_ARB,GLX_CONTEXT_CORE_PROFILE_BIT_ARB,
+			  	None
+			  };
+	
+	gGlxContext = glXCreateContextAttribsARB(gpdisplay,
+						gGlxFBConfig,
+						0,
+						True,
+						attribs);
+						
+	if(!gGlxContext)
+	{
+		fprintf(gpfile,"Not Obtained required context...\n");
+		const int attribs[] =
+			  {
+			  	GLX_CONTEXT_MAJOR_VERSION_ARB,1,
+			  	GLX_CONTEXT_MINOR_VERSION_ARB,0,
+			  	
+			  	None
+			  };
 
-	if (iPixelFormatIndex == 0)
-	{
-		return -1;
+		gGlxContext = glXCreateContextAttribsARB(gpdisplay,
+						gGlxFBConfig,
+						0,
+						True,
+						attribs);
 	}
-	if (SetPixelFormat(ghdc, iPixelFormatIndex, &pfd) == FALSE)
+	
+	//check obtained context is H/W context or not
+	if(!glXIsDirect(gpdisplay,gGlxContext))
 	{
-		return -2;
+		fprintf(gpfile,"Required context is not H/W render context\n");
 	}
-	ghrc = wglCreateContext(ghdc);
-	if (ghrc == NULL)
+	else
 	{
-		return -3;
+		fprintf(gpfile,"Required context is  H/W render context\n");
 	}
-	if (wglMakeCurrent(ghdc, ghrc) == FALSE)
-	{
-		return -4;
-	}
-	///programmable Pipeline changes..
+	
+	glXMakeCurrent( gpdisplay,
+			gWindow,
+			gGlxContext);
+	
+	//programmable changes		
 	result = glewInit();
-	if (result != GLEW_OK)
+	if(result != GLEW_OK)
 	{
-		fwprintf(gpfile, TEXT("glewInit failed"));
-		uninitialize();
-		DestroyWindow(ghwnd);
+		fprintf(gpfile,"glewInit failed\n");
+		Uninitialize();
+		
 	}
 	//************VERTEX SHADER***************************
 	//Define vertex shader Object
 	gVertexShaderObject_PV = glCreateShader(GL_VERTEX_SHADER);
 	gVertexShaderObject_PF = glCreateShader(GL_VERTEX_SHADER);
-
 	//write vertex shader code
-	// 
-	//vertex shader for per vertex
-	const GLchar* vertexShaderSourceCode_PV =
+	 const GLchar* vertexShaderSourceCode_PV =
 		"#version 430 core" \
 		"\n" \
 		"in vec4 vPosition;" \
@@ -631,7 +865,6 @@ int initialize(void)
 			"gl_Position = u_projection_matrix * u_view_matrix * u_model_matrix * vPosition;" \
 		" } ";
 	//specify vertex source code to vetex shader object
-
 	glShaderSource(gVertexShaderObject_PV,
 					1,
 					(GLchar **)&vertexShaderSourceCode_PV,
@@ -641,8 +874,7 @@ int initialize(void)
 					1,
 					(GLchar **)&vertexShaderSourceCode_PF,
 					NULL);
-
-	//compile vertex shader code per vertex
+	//compile vertex shader code
 	glCompileShader(gVertexShaderObject_PV);
 
 	//Error checking
@@ -654,35 +886,37 @@ int initialize(void)
 					GL_COMPILE_STATUS,
 					&iShaderCompilationStatus);
 
-	if (iShaderCompilationStatus == GL_FALSE)
+	if(iShaderCompilationStatus == GL_FALSE)
 	{
 		glGetShaderiv(gVertexShaderObject_PV,
-			GL_INFO_LOG_LENGTH,
-			&iInfoLength);
-		if (iInfoLength > 0)
+						GL_INFO_LOG_LENGTH,
+						&iInfoLength);
+		if(iInfoLength > 0)
 		{
 			szInfoLog = (GLchar *)malloc(iInfoLength);
 
-			if (szInfoLog != NULL)
+			if(szInfoLog != NULL)
 			{
 				GLsizei writtened;
 
 				glGetShaderInfoLog(gVertexShaderObject_PV,
-					iInfoLength,
-					&writtened,
-					szInfoLog);
-				fprintf(gpfile, "ERROR:VERTEX SHADER PER VERTEX :%s", szInfoLog);
+									iInfoLength,
+									&writtened,
+									szInfoLog);
+				fprintf(gpfile,"ERROR:VERTEX SHADER PV:%s",szInfoLog);
 				free(szInfoLog);
-				uninitialize();
-				DestroyWindow(ghwnd);
+				Uninitialize();
+				
 				exit(0);
 			}
 		}
 	}
+
+	
+
 	//compile vertex shader code per fragment
 	glCompileShader(gVertexShaderObject_PF);
 
-	//Error checking
 	iShaderCompilationStatus = 0;
 	iInfoLength = 0;
 	szInfoLog = NULL;
@@ -691,37 +925,36 @@ int initialize(void)
 					GL_COMPILE_STATUS,
 					&iShaderCompilationStatus);
 
-	if (iShaderCompilationStatus == GL_FALSE)
+	if(iShaderCompilationStatus == GL_FALSE)
 	{
 		glGetShaderiv(gVertexShaderObject_PF,
-			GL_INFO_LOG_LENGTH,
-			&iInfoLength);
-		if (iInfoLength > 0)
+						GL_INFO_LOG_LENGTH,
+						&iInfoLength);
+		if(iInfoLength > 0)
 		{
 			szInfoLog = (GLchar *)malloc(iInfoLength);
 
-			if (szInfoLog != NULL)
+			if(szInfoLog != NULL)
 			{
 				GLsizei writtened;
 
 				glGetShaderInfoLog(gVertexShaderObject_PF,
-					iInfoLength,
-					&writtened,
-					szInfoLog);
-				fprintf(gpfile, "ERROR:VERTEX SHADER PER FRAGMENT :%s", szInfoLog);
+									iInfoLength,
+									&writtened,
+									szInfoLog);
+				fprintf(gpfile,"ERROR:VERTEX SHADER PF:%s",szInfoLog);
 				free(szInfoLog);
-				uninitialize();
-				DestroyWindow(ghwnd);
+				Uninitialize();
+				
 				exit(0);
 			}
 		}
 	}
+
 	//********************FRAGMENT SHADER*****************
 	gFragmentShaderObject_PV = glCreateShader(GL_FRAGMENT_SHADER);
 	gFragmentShaderObject_PF = glCreateShader(GL_FRAGMENT_SHADER);
-
-	//write vertex shader code 
-	// 
+	//write vertex shader code
 	const GLchar * fragmentShaderSourceCode_PV =
 		"#version 430 core" \
 		"\n" \
@@ -811,93 +1044,88 @@ int initialize(void)
 			"}" \
 		"}";
 	//specify vertex source code to vetex shader object
-
 	glShaderSource(gFragmentShaderObject_PV,
-		1,
-		(GLchar **)&fragmentShaderSourceCode_PV,
-		NULL);
+					1,
+					(GLchar **)&fragmentShaderSourceCode_PV,
+					NULL);
 
 	glShaderSource(gFragmentShaderObject_PF,
-		1,
-		(GLchar **)&fragmentShaderSourceCode_PF,
-		NULL);
-
-	//compile fragment shader code
+					1,
+					(GLchar **)&fragmentShaderSourceCode_PF,
+					NULL);
+	//compile vertex shader code
 	glCompileShader(gFragmentShaderObject_PV);
 
 	//Error checking
-	iShaderCompilationStatus = 0;
-	iInfoLength = 0;
-	szInfoLog = NULL;
+	 iShaderCompilationStatus = 0;
+	 iInfoLength = 0;
+	 szInfoLog = NULL;
 
-	glGetShaderiv(gFragmentShaderObject_PV,
-		GL_COMPILE_STATUS,
-		&iShaderCompilationStatus);
+	 glGetShaderiv(gFragmentShaderObject_PV,
+					GL_COMPILE_STATUS,
+					&iShaderCompilationStatus);
 
-	if (iShaderCompilationStatus == GL_FALSE)
+	if(iShaderCompilationStatus == GL_FALSE)
 	{
 		glGetShaderiv(gFragmentShaderObject_PV,
-			GL_INFO_LOG_LENGTH,
-			&iInfoLength);
-		if (iInfoLength > 0)
+						GL_INFO_LOG_LENGTH,
+						&iInfoLength);
+		if(iInfoLength > 0)
 		{
 			szInfoLog = (GLchar *)malloc(iInfoLength);
 
-			if (szInfoLog != NULL)
+			if(szInfoLog != NULL)
 			{
 				GLsizei writtened;
 
 				glGetShaderInfoLog(gFragmentShaderObject_PV,
-					iInfoLength,
-					&writtened,
-					szInfoLog);
-				fprintf(gpfile, "ERROR:FRAGMENT SHADER PER VERTEX:%s", szInfoLog);
+									iInfoLength,
+									&writtened,
+									szInfoLog);
+				fprintf(gpfile,"ERROR:FRAGMENT SHADER PV:%s",szInfoLog);
 				free(szInfoLog);
-				uninitialize();
-				DestroyWindow(ghwnd);
+				Uninitialize();
+				
 				exit(0);
 			}
 		}
 	}
 
 	glCompileShader(gFragmentShaderObject_PF);
-	//error checking for fragment shader per fragment
+
 	iShaderCompilationStatus = 0;
-	iInfoLength = 0;
-	szInfoLog = NULL;
+	 iInfoLength = 0;
+	 szInfoLog = NULL;
 
-	glGetShaderiv(gFragmentShaderObject_PF,
-		GL_COMPILE_STATUS,
-		&iShaderCompilationStatus);
-
-	if (iShaderCompilationStatus == GL_FALSE)
+	 glGetShaderiv(gFragmentShaderObject_PF,
+					GL_COMPILE_STATUS,
+					&iShaderCompilationStatus);
+	 if(iShaderCompilationStatus == GL_FALSE)
 	{
 		glGetShaderiv(gFragmentShaderObject_PF,
-			GL_INFO_LOG_LENGTH,
-			&iInfoLength);
-		if (iInfoLength > 0)
+						GL_INFO_LOG_LENGTH,
+						&iInfoLength);
+		if(iInfoLength > 0)
 		{
 			szInfoLog = (GLchar *)malloc(iInfoLength);
 
-			if (szInfoLog != NULL)
+			if(szInfoLog != NULL)
 			{
 				GLsizei writtened;
 
 				glGetShaderInfoLog(gFragmentShaderObject_PF,
-					iInfoLength,
-					&writtened,
-					szInfoLog);
-				fprintf(gpfile, "ERROR:FRAGMENT SHADER PER FRAGMENT:%s", szInfoLog);
+									iInfoLength,
+									&writtened,
+									szInfoLog);
+				fprintf(gpfile,"ERROR:FRAGMENT SHADER PF:%s",szInfoLog);
 				free(szInfoLog);
-				uninitialize();
-				DestroyWindow(ghwnd);
+				Uninitialize();
+				
 				exit(0);
 			}
 		}
 	}
-
-	/////////Create shader program object///////////////////
-
+	//Create shader program object
 	gShaderProgramObject_PV = glCreateProgram();
 	gShaderProgramObject_PF = glCreateProgram();
 
@@ -906,7 +1134,8 @@ int initialize(void)
 	glAttachShader(gShaderProgramObject_PV, gFragmentShaderObject_PV);
 	glAttachShader(gShaderProgramObject_PF, gVertexShaderObject_PF);
 	glAttachShader(gShaderProgramObject_PF, gFragmentShaderObject_PF);
-	//*** PRELINKING BINDING TO VERTEX ATTRIBUTES***
+
+        //*** PRELINKING BINDING TO VERTEX ATTRIBUTES***
 	glBindAttribLocation(gShaderProgramObject_PV,
 						AMC_ATTRIBUTES_POSITION,
 						"vPosition");
@@ -922,90 +1151,82 @@ int initialize(void)
 	glBindAttribLocation(gShaderProgramObject_PF,
 						AMC_ATTRIBUTES_NORMAL,
 						"vNormal");	
-
+											
 	//link above shader program
 	glLinkProgram(gShaderProgramObject_PV);
 
 	glLinkProgram(gShaderProgramObject_PF);
-
 	// ***ERROR CHECKING LINKING********
-	//Error checking for program per vertex
-	GLint iShaderLinkStatus = 0;
-	iInfoLength = 0;
-	szInfoLog = NULL;
+	//Error checking for program linking
+		GLint iShaderLinkStatus = 0;
+		iInfoLength = 0;
+		szInfoLog = NULL;
 
-	glGetProgramiv(gShaderProgramObject_PV,
-					GL_LINK_STATUS,
-					&iShaderLinkStatus);
-
-	if (iShaderCompilationStatus == GL_FALSE)
-	{
 		glGetProgramiv(gShaderProgramObject_PV,
-						GL_INFO_LOG_LENGTH,
-						&iInfoLength);
-
-		if (iInfoLength > 0)
+							GL_LINK_STATUS,
+							&iShaderLinkStatus);
+		if(iShaderCompilationStatus == GL_FALSE)
 		{
-			szInfoLog = (GLchar *)malloc(iInfoLength);
-
-			if (szInfoLog != NULL)
+			glGetProgramiv(gShaderProgramObject_PV,
+							GL_INFO_LOG_LENGTH,
+							&iInfoLength);
+			if(iInfoLength > 0)
 			{
-				GLsizei wr;
+				szInfoLog = (GLchar *)malloc(iInfoLength);
 
-				glGetShaderInfoLog(gShaderProgramObject_PV,
-					iInfoLength,
-					&wr,
-					szInfoLog);
+				if (szInfoLog != NULL)
+				{
+					GLsizei wr;
 
-				fwprintf(gpfile, TEXT("ERROR:SHADER LINK PER VERTEX:%s"), szInfoLog);
-				free(szInfoLog);
-				uninitialize();
-				DestroyWindow(ghwnd);
-				exit(0);
+					glGetShaderInfoLog(gShaderProgramObject_PV,
+						iInfoLength,
+						&wr,
+						szInfoLog);
+
+					fprintf(gpfile,"ERROR:SHADER LINK:%s",szInfoLog);
+					free(szInfoLog);
+					Uninitialize();
+					exit(0); 
+				}
+				
 			}
-
 		}
-	}
-
-	//Error checking for program per fragment
-	iShaderLinkStatus = 0;
-	iInfoLength = 0;
-	szInfoLog = NULL;
-
-	glGetProgramiv(gShaderProgramObject_PF,
-		GL_LINK_STATUS,
-		&iShaderLinkStatus);
 	
-	if (iShaderCompilationStatus == GL_FALSE)
-	{
+		iShaderLinkStatus = 0;
+		iInfoLength = 0;
+		szInfoLog = NULL;
+
 		glGetProgramiv(gShaderProgramObject_PF,
-			GL_INFO_LOG_LENGTH,
-			&iInfoLength);
-		if (iInfoLength > 0)
+							GL_LINK_STATUS,
+							&iShaderLinkStatus);
+		if(iShaderCompilationStatus == GL_FALSE)
 		{
-			szInfoLog = (GLchar *)malloc(iInfoLength);
-
-			if (szInfoLog != NULL)
+			glGetProgramiv(gShaderProgramObject_PF,
+							GL_INFO_LOG_LENGTH,
+							&iInfoLength);
+			if(iInfoLength > 0)
 			{
-				GLsizei wr;
+				szInfoLog = (GLchar *)malloc(iInfoLength);
 
-				glGetShaderInfoLog(gShaderProgramObject_PF,
-					iInfoLength,
-					&wr,
-					szInfoLog);
+				if (szInfoLog != NULL)
+				{
+					GLsizei wr;
 
-				fwprintf(gpfile, TEXT("ERROR:SHADER LINK PER FRAGMENT:%s"), szInfoLog);
-				free(szInfoLog);
-				uninitialize();
-				DestroyWindow(ghwnd);
-				exit(0);
+					glGetShaderInfoLog(gShaderProgramObject_PF,
+						iInfoLength,
+						&wr,
+						szInfoLog);
+
+					fprintf(gpfile,"ERROR:SHADER LINK:%s",szInfoLog);
+					free(szInfoLog);
+					Uninitialize();
+					exit(0); 
+				}
+				
 			}
-
 		}
-	}
-
 	///***POST LINKING GETTING UNIFORMS**
-
+	//getting light uniforms locations
 	//getting light uniforms locations
 	isLKeyIsPressedUniforms_PV = glGetUniformLocation(gShaderProgramObject_PV, "islkeypressed_PV");
 	isLKeyIsPressedUniforms_PF = glGetUniformLocation(gShaderProgramObject_PF, "islkeypressed_PF");
@@ -1074,8 +1295,9 @@ int initialize(void)
 	viewMatrixUniform_PF = glGetUniformLocation(gShaderProgramObject_PF, "u_view_matrix");
 
 	projectionUniform_PF = glGetUniformLocation(gShaderProgramObject_PF, "u_projection_matrix");
+	//arrays
 
-	fwprintf(gpfile, TEXT("Post link success!!\n"));
+	fprintf(gpfile,"Post link success!!\n");
 
 	//sphere 
 	getSphereVertexData(sphere_vertices, sphere_normals, sphere_textures, sphere_elements);
@@ -1154,11 +1376,12 @@ int initialize(void)
 
 	perspectiveProjectionMatrix = mat4::identity();
 
-	resize(WIN_WIDTH, WIN_HEIGHT);
+        
+	resize(giWindowWidth, giWindowHeight );
 
-	return 0;
+	fprintf(gpfile,"initialize END\n");
 }
-
+//
 void resize(int width, int height)
 {
 	if (height == 0)
@@ -1169,12 +1392,14 @@ void resize(int width, int height)
 
 	perspectiveProjectionMatrix =
 		perspective(45.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
-
+	
+	fprintf(gpfile,"resize END\n");
 }
 
-void display(void)
+//
+void display()
 {
-	//fwprintf(gpfile,TEXT("In Display\n"));
+	//fprintf(gpfile,"Display START\n");
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//declare matrices
@@ -1307,8 +1532,8 @@ void display(void)
 	glBindVertexArray(0);
 
 	glUseProgram(0);
-	SwapBuffers(ghdc);
-	//fwprintf(gpfile,TEXT("End OF display\n"));
+	glXSwapBuffers(gpdisplay, gWindow);
+	//fprintf(gpfile,"Display END\n");
 }
 
 void update()
@@ -1319,7 +1544,7 @@ void update()
 	}
 	else
 	{
-		angle_X += 0.04f;
+		angle_X += 0.005f;
 	}
 
 	lightPosition_Red[0] = 0.0f;
@@ -1336,130 +1561,4 @@ void update()
 	lightPosition_Blue[1] = 100 * sin(angle_X);
 	lightPosition_Blue[2] = 0.0f;
 	lightPosition_Blue[3] = 1.0f;
-
-	
-
-}
-void uninitialize(void)
-{
-	int uninitialize2(GLuint);
-
-	if (vbo_element_vbo)
-	{
-		glDeleteBuffers(1, &vbo_element_vbo);
-		vbo_element_vbo = 0;
-	}
-
-	if (vbo_normals_vbo)
-	{
-		glDeleteVertexArrays(1, &vbo_normals_vbo);
-		vbo_normals_vbo = 0;
-	}
-
-	if (vbo_position_vbo)
-	{
-		glDeleteVertexArrays(1, &vbo_position_vbo);
-		vbo_position_vbo = 0;
-	}
-	//	////shader uninitialize code
-	int ret = 0;
-
-	ret = uninitialize2(gShaderProgramObject_PV);
-	ret = uninitialize2(gShaderProgramObject_PF);
-
-	if (ret != 0)
-	{
-		fprintf(gpfile, "\nFaild uninitialize2\n");
-	}
-	else
-	{
-		fprintf(gpfile, " \nuninitialize2 successfull\n");
-	}
-
-
-	if (bFullScreen == true)
-	{
-		SetWindowLong(ghwnd,
-			GWL_STYLE,
-			dwstyle |
-			WS_OVERLAPPEDWINDOW);
-
-		SetWindowPlacement(ghwnd, &wpPrev);
-
-		SetWindowPos(ghwnd,
-			HWND_TOP,
-			0, 0, 0, 0,
-			SWP_NOZORDER |
-			SWP_FRAMECHANGED |
-			SWP_NOMOVE |
-			SWP_NOSIZE |
-			SWP_NOOWNERZORDER);
-
-		ShowCursor(TRUE);
-	}
-	if (wglGetCurrentContext() == ghrc)
-	{
-		wglMakeCurrent(NULL, NULL);
-	}
-
-	if (ghrc)
-	{
-		wglDeleteContext(ghrc);
-		ghrc = NULL;
-	}
-
-	if (ghdc)
-	{
-		ReleaseDC(ghwnd, ghdc);
-		ghdc = NULL;
-	}
-}
-
-int uninitialize2(GLuint shaderObject)
-{
-	GLsizei shaderCount;
-	GLsizei shaderNumber;
-
-	if (shaderObject)
-	{
-		glUseProgram(shaderObject);
-
-		glGetProgramiv(shaderObject,
-			GL_ATTACHED_SHADERS,
-			&shaderCount);
-
-
-		GLuint *pShaders = (GLuint*)malloc(sizeof(GLuint)*shaderCount);
-
-		if (pShaders)
-		{
-			glGetAttachedShaders(shaderObject,
-				shaderCount,
-				&shaderCount,
-				pShaders);
-
-			for (shaderNumber = 0; shaderNumber < shaderCount; shaderNumber++)
-			{
-				glDetachShader(shaderObject,
-					pShaders[shaderNumber]);
-
-				glDeleteShader(pShaders[shaderNumber]);
-
-				pShaders[shaderNumber] = 0;
-			}
-			free(pShaders);
-		}
-		else
-		{
-			fprintf(gpfile, "\nUninitialize2 : Failed to alloc memory\n");
-			return 1;
-		}
-
-		glDeleteProgram(shaderObject);
-
-		shaderObject = 0;
-
-		glUseProgram(0);
-	}
-	return 0;
 }
