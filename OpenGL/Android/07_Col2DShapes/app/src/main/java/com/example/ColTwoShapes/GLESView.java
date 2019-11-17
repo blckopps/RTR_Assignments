@@ -119,7 +119,8 @@ public class GLESView extends GLSurfaceView implements GLSurfaceView.Renderer ,O
 	 @Override 
 	 public boolean onScroll(MotionEvent e1, MotionEvent e2, float disX, float disY)
 	 {
-		 
+	        Uninitialize();
+		 System.exit(0);
 		 return(true);
 	 }
 	 
@@ -607,5 +608,61 @@ public class GLESView extends GLSurfaceView implements GLSurfaceView.Renderer ,O
 		
 		requestRender();
 		System.out.println("RTR: End of display()");
+	}
+	
+	private void Uninitialize()
+	{
+	
+	       
+	                
+	                if (vbo_pos_triangle[0] != 0)
+	                {
+		                GLES31.glDeleteBuffers(1, vbo_pos_triangle , 0);
+		                
+	                }
+                                
+                        if (vbo_pos_rectangle[0] != 0)
+	                {
+		                GLES31.glDeleteBuffers(1, vbo_pos_rectangle , 0);
+		                
+	                }
+	                if (vbo_col_triangle[0] != 0)
+	                {
+		                GLES31.glDeleteBuffers(1, vbo_col_triangle , 0);
+		                
+	                }
+                                
+                        if (vbo_col_rectangle[0] != 0)
+	                {
+		                GLES31.glDeleteBuffers(1, vbo_col_rectangle , 0);
+		                
+	                }
+	                if (vao_triangle[0] != 0)
+	                {
+		                GLES31.glDeleteVertexArrays(1, vao_triangle, 0);
+		                
+	                }
+                        
+                        if (vao_rectangle[0] != 0)
+	                {
+		                GLES31.glDeleteVertexArrays(1, vao_rectangle, 0);
+		                
+	                }
+	       GLES31.glUseProgram(shaderProgramObject);
+	       
+	       GLES31.glDetachShader(shaderProgramObject, GLES31.GL_FRAGMENT_SHADER );
+	       
+	       GLES31.glDeleteShader(fragmentShaderObject);
+	       
+	        GLES31.glDetachShader(shaderProgramObject, GLES31.GL_VERTEX_SHADER );
+	       
+	       GLES31.glDeleteShader(vertexShaderObject);
+	       
+	       GLES31.glDeleteProgram(shaderProgramObject);
+	       
+	       GLES31.glUseProgram(0);
+	       
+	       System.out.println("Uninitialize successfull");
+
 	}
 }

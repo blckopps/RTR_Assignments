@@ -134,7 +134,9 @@ public class GLESView extends GLSurfaceView implements GLSurfaceView.Renderer ,O
 	 @Override 
 	 public boolean onScroll(MotionEvent e1, MotionEvent e2, float disX, float disY)
 	 {
-		 
+	        
+		Uninitialize();
+		System.exit(0); 
 		 return(true);
 	 }
 	 
@@ -637,7 +639,7 @@ public class GLESView extends GLSurfaceView implements GLSurfaceView.Renderer ,O
 	        GLES31.glViewport(0, 0, width, height);
         
 			
-		Matrix.perspectiveM(perspectiveProjectionMatrix, 0 ,45.0f, width/height, 0.1f, 100.0f);        
+		Matrix.perspectiveM(perspectiveProjectionMatrix, 0 ,45.0f, (float)width/(float)height, 0.1f, 100.0f);        
 			
 	        
 		System.out.println("RTR: In resize()");
@@ -675,7 +677,7 @@ public class GLESView extends GLSurfaceView implements GLSurfaceView.Renderer ,O
 		
 		//Cube
 		
-		Matrix.translateM(modelViewMatrix, 0 ,translateMatrix, 0, 1.8f, 0.0f, -9.0f);
+		Matrix.translateM(modelViewMatrix, 0 ,translateMatrix, 0, 2.1f, 0.0f, -7.0f);
 		
 		Matrix.setRotateM(rotationMatrix, 0 , angle_cube, 1.0f, 1.0f, 1.0f);
 
@@ -730,7 +732,7 @@ public class GLESView extends GLSurfaceView implements GLSurfaceView.Renderer ,O
 		Matrix.setIdentityM(translateMatrix, 0);
 		Matrix.setIdentityM(rotationMatrix, 0);
 
-		Matrix.translateM(modelViewMatrix, 0 ,translateMatrix, 0, -2.0f, 0.0f, -9.0f);
+		Matrix.translateM(modelViewMatrix, 0 ,translateMatrix, 0, -2.4f, 0.0f, -6.0f);
 		
 		Matrix.setRotateM(rotationMatrix, 0 , angle_pyramid, 0.0f, 1.0f, 0.0f);
 	
@@ -826,4 +828,60 @@ public class GLESView extends GLSurfaceView implements GLSurfaceView.Renderer ,O
 
                 return (texture[0]);
         }
+        
+        	private void Uninitialize()
+	{
+	
+	       
+	                
+	                if (vbo_texture_cube[0] != 0)
+	                {
+		                GLES31.glDeleteBuffers(1, vbo_texture_cube , 0);
+		                
+	                }
+                                
+                        if (vbo_texture_pyramid[0] != 0)
+	                {
+		                GLES31.glDeleteBuffers(1, vbo_texture_pyramid , 0);
+		                
+	                }
+	                if (vbo_pos_cube[0] != 0)
+	                {
+		                GLES31.glDeleteBuffers(1, vbo_pos_cube , 0);
+		                
+	                }
+                                
+                        if (vbo_pos_pyramid[0] != 0)
+	                {
+		                GLES31.glDeleteBuffers(1, vbo_pos_pyramid , 0);
+		                
+	                }
+	                if (vao_cube[0] != 0)
+	                {
+		                GLES31.glDeleteVertexArrays(1, vao_cube, 0);
+		                
+	                }
+                        
+                        if (vao_pyramid[0] != 0)
+	                {
+		                GLES31.glDeleteVertexArrays(1, vao_pyramid, 0);
+		                
+	                }
+	       GLES31.glUseProgram(shaderProgramObject);
+	       
+	       GLES31.glDetachShader(shaderProgramObject, GLES31.GL_FRAGMENT_SHADER );
+	       
+	       GLES31.glDeleteShader(fragmentShaderObject);
+	       
+	        GLES31.glDetachShader(shaderProgramObject, GLES31.GL_VERTEX_SHADER );
+	       
+	       GLES31.glDeleteShader(vertexShaderObject);
+	       
+	       GLES31.glDeleteProgram(shaderProgramObject);
+	       
+	       GLES31.glUseProgram(0);
+	       
+	       System.out.println("Uninitialize successfull");
+
+	}
 }

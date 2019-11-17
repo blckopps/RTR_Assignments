@@ -463,7 +463,7 @@ public class GLESView extends GLSurfaceView implements GLSurfaceView.Renderer ,O
 	        GLES31.glViewport(0, 0, width, height);
         
 			
-		Matrix.perspectiveM(perspectiveProjectionMatrix, 0 ,45.0f, width/height, 0.1f, 100.0f);        
+		Matrix.perspectiveM(perspectiveProjectionMatrix, 0 ,45.0f, (float)width/(float)height, 0.1f, 100.0f);        
 			
 	        
 		System.out.println("RTR: In resize()");
@@ -623,4 +623,46 @@ public class GLESView extends GLSurfaceView implements GLSurfaceView.Renderer ,O
 
                 return (texture[0]);
         }
+        
+        
+	private void Uninitialize()
+	{
+	
+	       
+	                
+	                if (vbo_texcoord[0] != 0)
+	                {
+		                GLES31.glDeleteBuffers(1, vbo_texcoord , 0);
+		                
+	                }
+                                
+                        if (vbo_rect[0] != 0)
+	                {
+		                GLES31.glDeleteBuffers(1, vbo_rect , 0);
+		                
+	                }
+	                if (vao_rect[0] != 0)
+	                {
+		                GLES31.glDeleteVertexArrays(1, vao_rect, 0);
+		                
+	                }
+                        
+                        
+	       GLES31.glUseProgram(shaderProgramObject);
+	       
+	       GLES31.glDetachShader(shaderProgramObject, GLES31.GL_FRAGMENT_SHADER );
+	       
+	       GLES31.glDeleteShader(fragmentShaderObject);
+	       
+	        GLES31.glDetachShader(shaderProgramObject, GLES31.GL_VERTEX_SHADER );
+	       
+	       GLES31.glDeleteShader(vertexShaderObject);
+	       
+	       GLES31.glDeleteProgram(shaderProgramObject);
+	       
+	       GLES31.glUseProgram(0);
+	       
+	       System.out.println("Uninitialize successfull");
+
+	}
     }
