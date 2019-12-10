@@ -1,0 +1,6 @@
+log file created
+Before
+After
+Post link success!!
+Before LoadTexture 
+Initialization Successful

@@ -1,0 +1,4 @@
+log file created
+Post link success!!
+Initialization Successful 
+uninitialize2 successfull
