@@ -1,0 +1,150 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:2:1-23:12
+INJECTED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:2:1-23:12
+INJECTED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:2:1-23:12
+INJECTED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:2:1-23:12
+MERGED from [androidx.appcompat:appcompat:1.0.2] /home/shubham/.gradle/caches/transforms-2/files-2.1/488758992aeaf2657f49440bb115839f/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.constraintlayout:constraintlayout:1.1.3] /home/shubham/.gradle/caches/transforms-2/files-2.1/1ac840ad010b81fadfcef94ab0c7f9a0/AndroidManifest.xml:2:1-11:12
+MERGED from [androidx.fragment:fragment:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/b4336f2d0dd3e154ab8d96ee5b9b1031/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/e6b2f378057175a15a34195401a8e7f5/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/702ae74094f2e4766246c59a455e844f/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/9ff904f406638b45609c428bdaac1767/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.vectordrawable:vectordrawable:1.0.1] /home/shubham/.gradle/caches/transforms-2/files-2.1/48a32b8eb92b94478ab9062b961f8e48/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.loader:loader:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/6458b808126a761cc9955aca903923cc/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.viewpager:viewpager:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/5c1cb2231646cabfa842cb82ea2e8985/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/cc86e0927c494fbb783121cff3c5c864/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/4eaada3f62747618e0e03d092b7f01f4/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/65654519677c4dd22411c5149027fee1/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.customview:customview:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/f9106fc69e278ed62207c6430dfdc06c/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/c20a23fea316d9079828c9c2001499fa/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/93f55a2939af29d1f2db3e4502642a00/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.core:core:1.0.1] /home/shubham/.gradle/caches/transforms-2/files-2.1/e08a267e7f49e826f6f0993ab94a4fda/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/5deaec4e93210c5a35a05caf55b8fdef/AndroidManifest.xml:17:1-25:12
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/67e9cd89dc779a685e3675897164abc1/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/92811eba049d300534acaa7df6aa23d9/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.documentfile:documentfile:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/2af5426026b696de402d9d5c9d913f01/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/7f0db596a0f2221f68bac86121947134/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.print:print:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/490dfab17d52eb4aa8623b28091eaefc/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/3eceb2eb6ea33e08cdc552dec3d8fca9/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/6b7d5d1e8dcfc731fef8859d54865111/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/d03d352f92477bce92702d08d55b144c/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.arch.core:core-runtime:2.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/1925da4451e118bc81daabcf8d3140e3/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.interpolator:interpolator:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/bc819238ac95417fe6d52486ec4a69bf/AndroidManifest.xml:17:1-22:12
+INJECTED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:2:1-23:12
+INJECTED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:2:1-23:12
+INJECTED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:2:1-23:12
+	package
+		ADDED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:3:5-45
+		INJECTED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml
+		INJECTED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml
+	android:versionName
+		INJECTED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml
+		ADDED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:2:1-23:12
+		INJECTED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml
+	android:versionCode
+		INJECTED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml
+		ADDED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:2:1-23:12
+		INJECTED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:2:11-69
+uses-sdk
+ADDED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:4:2-6:34
+INJECTED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:4:2-6:34
+INJECTED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:4:2-6:34
+MERGED from [androidx.appcompat:appcompat:1.0.2] /home/shubham/.gradle/caches/transforms-2/files-2.1/488758992aeaf2657f49440bb115839f/AndroidManifest.xml:20:5-44
+MERGED from [androidx.appcompat:appcompat:1.0.2] /home/shubham/.gradle/caches/transforms-2/files-2.1/488758992aeaf2657f49440bb115839f/AndroidManifest.xml:20:5-44
+MERGED from [androidx.constraintlayout:constraintlayout:1.1.3] /home/shubham/.gradle/caches/transforms-2/files-2.1/1ac840ad010b81fadfcef94ab0c7f9a0/AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.constraintlayout:constraintlayout:1.1.3] /home/shubham/.gradle/caches/transforms-2/files-2.1/1ac840ad010b81fadfcef94ab0c7f9a0/AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.fragment:fragment:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/b4336f2d0dd3e154ab8d96ee5b9b1031/AndroidManifest.xml:20:5-44
+MERGED from [androidx.fragment:fragment:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/b4336f2d0dd3e154ab8d96ee5b9b1031/AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/e6b2f378057175a15a34195401a8e7f5/AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/e6b2f378057175a15a34195401a8e7f5/AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/702ae74094f2e4766246c59a455e844f/AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/702ae74094f2e4766246c59a455e844f/AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/9ff904f406638b45609c428bdaac1767/AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/9ff904f406638b45609c428bdaac1767/AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable:1.0.1] /home/shubham/.gradle/caches/transforms-2/files-2.1/48a32b8eb92b94478ab9062b961f8e48/AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable:1.0.1] /home/shubham/.gradle/caches/transforms-2/files-2.1/48a32b8eb92b94478ab9062b961f8e48/AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/6458b808126a761cc9955aca903923cc/AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/6458b808126a761cc9955aca903923cc/AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/5c1cb2231646cabfa842cb82ea2e8985/AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/5c1cb2231646cabfa842cb82ea2e8985/AndroidManifest.xml:20:5-44
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/cc86e0927c494fbb783121cff3c5c864/AndroidManifest.xml:20:5-44
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/cc86e0927c494fbb783121cff3c5c864/AndroidManifest.xml:20:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/4eaada3f62747618e0e03d092b7f01f4/AndroidManifest.xml:20:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/4eaada3f62747618e0e03d092b7f01f4/AndroidManifest.xml:20:5-44
+MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/65654519677c4dd22411c5149027fee1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/65654519677c4dd22411c5149027fee1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/f9106fc69e278ed62207c6430dfdc06c/AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/f9106fc69e278ed62207c6430dfdc06c/AndroidManifest.xml:20:5-44
+MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/c20a23fea316d9079828c9c2001499fa/AndroidManifest.xml:20:5-44
+MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/c20a23fea316d9079828c9c2001499fa/AndroidManifest.xml:20:5-44
+MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/93f55a2939af29d1f2db3e4502642a00/AndroidManifest.xml:20:5-44
+MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/93f55a2939af29d1f2db3e4502642a00/AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.0.1] /home/shubham/.gradle/caches/transforms-2/files-2.1/e08a267e7f49e826f6f0993ab94a4fda/AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.0.1] /home/shubham/.gradle/caches/transforms-2/files-2.1/e08a267e7f49e826f6f0993ab94a4fda/AndroidManifest.xml:20:5-44
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/5deaec4e93210c5a35a05caf55b8fdef/AndroidManifest.xml:20:5-44
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/5deaec4e93210c5a35a05caf55b8fdef/AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/67e9cd89dc779a685e3675897164abc1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/67e9cd89dc779a685e3675897164abc1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/92811eba049d300534acaa7df6aa23d9/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/92811eba049d300534acaa7df6aa23d9/AndroidManifest.xml:20:5-44
+MERGED from [androidx.documentfile:documentfile:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/2af5426026b696de402d9d5c9d913f01/AndroidManifest.xml:20:5-44
+MERGED from [androidx.documentfile:documentfile:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/2af5426026b696de402d9d5c9d913f01/AndroidManifest.xml:20:5-44
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/7f0db596a0f2221f68bac86121947134/AndroidManifest.xml:20:5-44
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/7f0db596a0f2221f68bac86121947134/AndroidManifest.xml:20:5-44
+MERGED from [androidx.print:print:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/490dfab17d52eb4aa8623b28091eaefc/AndroidManifest.xml:20:5-44
+MERGED from [androidx.print:print:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/490dfab17d52eb4aa8623b28091eaefc/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/3eceb2eb6ea33e08cdc552dec3d8fca9/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/3eceb2eb6ea33e08cdc552dec3d8fca9/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/6b7d5d1e8dcfc731fef8859d54865111/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/6b7d5d1e8dcfc731fef8859d54865111/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/d03d352f92477bce92702d08d55b144c/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/d03d352f92477bce92702d08d55b144c/AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/1925da4451e118bc81daabcf8d3140e3/AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/1925da4451e118bc81daabcf8d3140e3/AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/bc819238ac95417fe6d52486ec4a69bf/AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/bc819238ac95417fe6d52486ec4a69bf/AndroidManifest.xml:20:5-44
+INJECTED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:4:2-6:34
+INJECTED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:4:2-6:34
+	android:targetSdkVersion
+		ADDED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:5:3-34
+		INJECTED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml
+		INJECTED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		ADDED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:6:3-31
+		INJECTED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml
+		INJECTED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml
+application
+ADDED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:7:5-21:19
+MERGED from [androidx.constraintlayout:constraintlayout:1.1.3] /home/shubham/.gradle/caches/transforms-2/files-2.1/1ac840ad010b81fadfcef94ab0c7f9a0/AndroidManifest.xml:9:5-20
+MERGED from [androidx.constraintlayout:constraintlayout:1.1.3] /home/shubham/.gradle/caches/transforms-2/files-2.1/1ac840ad010b81fadfcef94ab0c7f9a0/AndroidManifest.xml:9:5-20
+MERGED from [androidx.core:core:1.0.1] /home/shubham/.gradle/caches/transforms-2/files-2.1/e08a267e7f49e826f6f0993ab94a4fda/AndroidManifest.xml:22:5-89
+MERGED from [androidx.core:core:1.0.1] /home/shubham/.gradle/caches/transforms-2/files-2.1/e08a267e7f49e826f6f0993ab94a4fda/AndroidManifest.xml:22:5-89
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/5deaec4e93210c5a35a05caf55b8fdef/AndroidManifest.xml:22:5-23:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] /home/shubham/.gradle/caches/transforms-2/files-2.1/5deaec4e93210c5a35a05caf55b8fdef/AndroidManifest.xml:22:5-23:19
+	android:appComponentFactory
+		ADDED from [androidx.core:core:1.0.1] /home/shubham/.gradle/caches/transforms-2/files-2.1/e08a267e7f49e826f6f0993ab94a4fda/AndroidManifest.xml:22:18-86
+	android:label
+		ADDED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:10:9-41
+	android:roundIcon
+		ADDED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:11:9-54
+	android:icon
+		ADDED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:9:9-43
+	android:theme
+		ADDED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:13:9-47
+activity#com.example.spheremovinglights.MainActivity
+ADDED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:14:9-20:20
+	android:name
+		ADDED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:14:19-47
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:15:13-19:29
+action#android.intent.action.MAIN
+ADDED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:16:17-69
+	android:name
+		ADDED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:16:25-66
+category#android.intent.category.LAUNCHER
+ADDED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:18:17-77
+	android:name
+		ADDED from /home/shubham/AndroidStudioProjects/18_Sphere_3MovingLights/app/src/main/AndroidManifest.xml:18:27-74

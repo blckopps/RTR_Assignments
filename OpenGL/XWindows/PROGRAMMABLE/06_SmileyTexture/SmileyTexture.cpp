@@ -835,15 +835,14 @@ void initialize(void)
 	glClearDepth(1.0f);
         
         perspectiveProjectionMatrix = mat4::identity();
-
-        LoadTexture(&texture_smiley,"Smiley.bmp");
-        
         
         
 	resize(giWindowWidth, giWindowHeight );
 
 	fprintf(gpfile,"initialize END\n");
 }
+
+
 //
 void resize(int width, int height)
 {
