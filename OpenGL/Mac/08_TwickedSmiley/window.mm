@@ -24,9 +24,9 @@ CVReturn MyDisplayLinkCallback(CVDisplayLinkRef , const CVTimeStamp *,
 //global variables
 FILE * gpFile = NULL;
 
-
+int choice = 0;
 //OGL global 
-
+GLfloat smileyTextureVertices[8];
 
 //interface declaration
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSWindowDelegate>
@@ -94,7 +94,7 @@ int main(int argc, const char* argv[])
                                                     defer:NO];
     fprintf(gpFile, "ENd create window\n");
     
-    [window setTitle:@"MAC OPENGL 2D SHAPES"];
+    [window setTitle:@"MAC OPENGL "];
     [window center];
     
     fprintf(gpFile, "Before initWithFrame for GLView\n");
@@ -427,14 +427,14 @@ int main(int argc, const char* argv[])
                                         1.0f, -1.0f, 0.0f
                                     };
 
-    const GLfloat smileyTextureVertices [] =
-                                    {
+    // const GLfloat smileyTextureVertices [] =
+    //                                 {
 
-                                        1.0f, 0.0f,
-                                        0.0f, 0.0f,
-                                        0.0f, 1.0f,
-                                        1.0f, 1.0f
-                                    };
+    //                                     1.0f, 0.0f,
+    //                                     0.0f, 0.0f,
+    //                                     0.0f, 1.0f,
+    //                                     1.0f, 1.0f
+    //                                 };
 
     
     //create vao for pyramid....
@@ -473,9 +473,9 @@ int main(int argc, const char* argv[])
                  vbo_texcoord_rectangle_SB);
 
     glBufferData(GL_ARRAY_BUFFER,
-                sizeof(smileyTextureVertices),
-                smileyTextureVertices,
-                GL_STATIC_DRAW);
+                8*sizeof(float),
+                NULL,
+                GL_DYNAMIC_DRAW);
 
     glVertexAttribPointer(AMC_ATTRIBUTES_TEXCOORD0,
                             2,
@@ -649,6 +649,59 @@ int main(int argc, const char* argv[])
                         GL_FALSE,
                         modelViewProjectionMatrix);
     
+    if(choice == 0)
+    {
+        smileyTextureVertices[0] = 1.0f;
+          smileyTextureVertices[1] = 1.0f;
+          smileyTextureVertices[2] = 0.0f;
+          smileyTextureVertices[3] = 1.0f;
+          smileyTextureVertices[4] = 0.0f;
+          smileyTextureVertices[5] = 0.0f;
+          smileyTextureVertices[6] = 1.0f;
+          smileyTextureVertices[7] = 0.0f;
+    }
+    else if(choice == 1)
+    {
+        smileyTextureVertices[0] = 0.5f;
+          smileyTextureVertices[1] = 0.5f;
+          smileyTextureVertices[2] = 0.0f;
+          smileyTextureVertices[3] = 0.5f;
+          smileyTextureVertices[4] = 0.0f;
+          smileyTextureVertices[5] = 0.0f;
+          smileyTextureVertices[6] = 0.5f;
+          smileyTextureVertices[7] = 0.0f;
+    }
+    else if(choice == 2)
+    {
+        smileyTextureVertices[0] = 2.0f;
+          smileyTextureVertices[1] = 2.0f;
+          smileyTextureVertices[2] = 0.0f;
+          smileyTextureVertices[3] = 2.0f;
+          smileyTextureVertices[4] = 0.0f;
+          smileyTextureVertices[5] = 0.0f;
+          smileyTextureVertices[6] = 2.0f;
+          smileyTextureVertices[7] = 0.0f;
+    }
+    else if(choice == 3)
+    {
+        smileyTextureVertices[0] = 0.5f;
+          smileyTextureVertices[1] = 0.5f;
+          smileyTextureVertices[2] = 0.5f;
+          smileyTextureVertices[3] = 0.5f;
+          smileyTextureVertices[4] = 0.5f;
+          smileyTextureVertices[5] = 0.5f;
+          smileyTextureVertices[6] = 0.5f;
+          smileyTextureVertices[7] = 0.5f;
+    }
+
+    glBindBuffer(GL_ARRAY_BUFFER,
+            vbo_texcoord_rectangle_SB);
+    
+    glBufferData(GL_ARRAY_BUFFER, 
+             sizeof(smileyTextureVertices),
+            smileyTextureVertices,
+            GL_STATIC_DRAW);
+
      glActiveTexture(GL_TEXTURE0);
 
      glBindTexture(GL_TEXTURE_2D, smileyTexture);
@@ -700,8 +753,22 @@ int main(int argc, const char* argv[])
             [[self window]toggleFullScreen:self];
         break;
 
-        default:
 
+        case '1':
+        //fprintf(gpFile, "1 key pressed\n");
+            choice = 1;
+        break;
+
+        case '2':
+            choice = 2;
+        break;
+
+        case '3':
+            choice = 3;
+        break;
+
+        default:
+            choice = 0;
         break;
     }
 }

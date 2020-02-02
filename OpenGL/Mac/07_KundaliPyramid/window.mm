@@ -24,6 +24,7 @@ CVReturn MyDisplayLinkCallback(CVDisplayLinkRef , const CVTimeStamp *,
 //global variables
 FILE * gpFile = NULL;
 
+float angle = 0.0f;
 
 //OGL global 
 
@@ -94,7 +95,7 @@ int main(int argc, const char* argv[])
                                                     defer:NO];
     fprintf(gpFile, "ENd create window\n");
     
-    [window setTitle:@"MAC OPENGL 2D SHAPES"];
+    [window setTitle:@"MAC OPENGL"];
     [window center];
     
     fprintf(gpFile, "Before initWithFrame for GLView\n");
@@ -149,14 +150,23 @@ int main(int argc, const char* argv[])
     
     
     ///////vao vbo///////
-    GLuint vao_rectangle_SB;
+    //pyramid
+    GLuint vao_pyramid_SB;
     GLuint vbo_position_rectangle_SB;
     GLuint vbo_texcoord_rectangle_SB;
    
+    //Cube
+    GLuint vao_cube_SB;
+    GLuint vbo_position_cube_SB;
+    GLuint vbo_texcoord_cube_SB;
+
    GLuint sampler_Uniform;
-    GLuint smileyTexture;
+
+    GLuint stoneTexture;
+    GLuint kundaliTetxure;
 
     GLuint mvpUniform_SB;
+    
     
     vmath::mat4 perspectiveProjectionMatrix;
 }
@@ -415,34 +425,184 @@ int main(int argc, const char* argv[])
     //create vao_SB
     //                                    "u_mvp_matrix");
     //Load texture
-    smileyTexture = [self loadTextureFromBMPFile:"Smiley.bmp"];
+    stoneTexture = [self loadTextureFromBMPFile:"Stone.bmp"];
+
+    kundaliTetxure = [self loadTextureFromBMPFile:"Kundali.bmp"];
     
     fprintf(gpFile,"Post link success!!\n");
 
-    const GLfloat rectangleVertices[] =
+    const GLfloat pyramidVertices[] =
                                     {
-                                        1.0f, 1.0f, 0.0f,
-                                        -1.0f, 1.0f, 0.0f,
-                                        -1.0f, -1.0f, 0.0f,
-                                        1.0f, -1.0f, 0.0f
+                                        //1st       
+                                        0.0f, 1.0f, 0.0f,
+                                        -1.0f, -1.0f, 1.0f,             
+                                        1.0f, -1.0f, 1.0f,
+                                        //2nd
+                    
+                                        0.0f, 1.0f, 0.0f,
+                                        1.0f, -1.0f, 1.0f,
+                                        1.0f, -1.0f, -1.0f,             
+                                        //3rd
+                                        0.0f, 1.0f, 0.0f,               
+                                        1.0f, -1.0f, -1.0f,             
+                                        -1.0f, -1.0f, -1.0f,
+                                        //4th
+                                        0.0f, 1.0f, 0.0f,               
+                                        -1.0f, -1.0f, -1.0f,
+                                        -1.0f, -1.0f, 1.0f
                                     };
 
-    const GLfloat smileyTextureVertices [] =
+    const GLfloat stoneTexcooeds [] =
                                     {
+                                            0.5f, 1.0f,
+                                            0.0f, 0.0f,
+                                            1.0f, 0.0f,
 
-                                        1.0f, 0.0f,
-                                        0.0f, 0.0f,
-                                        0.0f, 1.0f,
-                                        1.0f, 1.0f
+                                            0.5f, 1.0f,
+                                            1.0f, 0.0f,
+                                            0.0f, 0.0f,
+
+                                            0.5f, 1.0f,
+                                            1.0f, 0.0f,
+                                            0.0f, 0.0f,
+
+                                            0.5f, 1.0f,
+                                            0.0f, 0.0f,
+                                            1.0f, 0.0f
                                     };
 
+    const GLfloat cube_vertices[] =
+                                    {
+                                        //TOP
+                                         1.0f,1.0f,-1.0f,
+                                         -1.0f,1.0f,-1.0f,
+                                         -1.0f,1.0f,1.0f,                   
+                                         1.0f,1.0f,1.0f,                    
+                                        //bottom
+     
+                                         1.0f,-1.0f,-1.0f,
+                                         -1.0f,-1.0f,-1.0f,             
+                                         -1.0f,-1.0f,1.0f,
+                                         1.0f, -1.0f, 1.0f,
+                                        ////Front
+     
+                                         1.0f,1.0f,1.0f,                    
+                                         -1.0f,1.0f,1.0f,               
+                                         -1.0f,-1.0f,1.0f,              
+                                         1.0f,-1.0f,1.0f,
+                                        //back
+     
+                                         1.0f,1.0f,-1.0f,               
+                                         -1.0f,1.0f,-1.0f,              
+                                         -1.0f,-1.0f,-1.0f,             
+                                         1.0f,-1.0f,-1.0f,
+
+                                        //Right
+     
+                                         1.0f,1.0f,-1.0f,               
+                                         1.0f,1.0f,1.0f,                    
+                                         1.0f,-1.0f,1.0f,               
+                                         1.0f,-1.0f,-1.0f,
+
+                                        //left
+     
+                                         -1.0f,1.0f,1.0f,                   
+                                         -1.0f,1.0f,-1.0f,                  
+                                         -1.0f,-1.0f,-1.0f,                 
+                                         -1.0f,-1.0f,1.0f
+                                    };
+
+    const GLfloat cube_texture_vertex[]=
+                                        {
+                                            0.0f, 1.0f,
+                                            0.0f, 0.0f,
+                                            1.0f, 0.0f,
+                                            1.0f, 1.0f,
+
+                                            1.0f, 1.0f,
+                                            0.0f, 1.0f,
+                                            0.0f, 0.0f,
+                                            1.0f, 0.0f,
+
+                                            0.0f, 0.0f,
+                                            1.0f, 0.0f,
+                                            1.0f, 1.0f,
+                                            0.0f, 1.0f,
+
+                                            1.0f, 0.0f,
+                                            1.0f, 1.0f,
+                                            0.0f, 1.0f,
+                                            0.0f, 0.0f,
+
+                                            1.0f, 0.0f,
+                                            1.0f, 1.0f,
+                                            0.0f, 1.0f,
+                                            0.0f, 0.0f,
+
+                                            0.0f, 0.0f,
+                                            1.0f, 0.0f,
+                                            1.0f, 1.0f,
+                                            0.0f, 1.0f
+                                            
+                                        };
     
+
+    //Create vao and vbo for CUBE
+    //START:
+         glGenVertexArrays(1, &vao_cube_SB);
+    
+        glBindVertexArray(vao_cube_SB);
+
+        glGenBuffers(1, &vbo_position_cube_SB);    //vbo position attach cube
+
+        glBindBuffer(GL_ARRAY_BUFFER,
+                     vbo_position_cube_SB);
+
+        glBufferData(GL_ARRAY_BUFFER,
+                     sizeof(cube_vertices),
+                     cube_vertices,
+                     GL_STATIC_DRAW);
+
+        glVertexAttribPointer(AMC_ATTRIBUTES_POSITION,
+                                3,
+                                GL_FLOAT,
+                                GL_FALSE,
+                                0,
+                                NULL);
+
+        glEnableVertexAttribArray(AMC_ATTRIBUTES_POSITION);
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);       //Unbind vbo position py
+        
+        //texture
+        glGenBuffers(1, &vbo_texcoord_cube_SB);
+
+        glBindBuffer(GL_ARRAY_BUFFER, vbo_texcoord_cube_SB);
+
+        glBufferData(GL_ARRAY_BUFFER,
+                     sizeof(cube_texture_vertex),
+                     cube_texture_vertex,
+                     GL_STATIC_DRAW);
+
+        glVertexAttribPointer(AMC_ATTRIBUTES_TEXCOORD0,
+                                2,
+                                GL_FLOAT,
+                                GL_FALSE,
+                                0,
+                                NULL);
+
+        glEnableVertexAttribArray(AMC_ATTRIBUTES_TEXCOORD0);
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        glBindVertexArray(0);                               
+    //END:
     //create vao for pyramid....
     //START:
-    glGenVertexArrays(1, &vao_rectangle_SB);
+    glGenVertexArrays(1, &vao_pyramid_SB);
     
 
-    glBindVertexArray(vao_rectangle_SB);  //vao triangle bind
+    glBindVertexArray(vao_pyramid_SB);  //vao triangle bind
     
 
     glGenBuffers(1, &vbo_position_rectangle_SB);
@@ -451,8 +611,8 @@ int main(int argc, const char* argv[])
                 vbo_position_rectangle_SB);
 
     glBufferData(GL_ARRAY_BUFFER,
-                 sizeof(rectangleVertices),
-                 rectangleVertices,
+                 sizeof(pyramidVertices),
+                 pyramidVertices,
                  GL_STATIC_DRAW);
 
     glVertexAttribPointer(AMC_ATTRIBUTES_POSITION,
@@ -473,8 +633,8 @@ int main(int argc, const char* argv[])
                  vbo_texcoord_rectangle_SB);
 
     glBufferData(GL_ARRAY_BUFFER,
-                sizeof(smileyTextureVertices),
-                smileyTextureVertices,
+                sizeof(stoneTexcooeds),
+                stoneTexcooeds,
                 GL_STATIC_DRAW);
 
     glVertexAttribPointer(AMC_ATTRIBUTES_TEXCOORD0,
@@ -631,18 +791,23 @@ int main(int argc, const char* argv[])
     vmath::mat4 modelViewMatrix;
      vmath::mat4 modelViewProjectionMatrix;
      vmath::mat4 translateMatrix;
+     vmath::mat4 rotationMatrix;
      //mat4 rotationMatrix;
     
     //make identity matrix
      modelViewMatrix = vmath::mat4::identity();
      modelViewProjectionMatrix = vmath::mat4::identity();
      translateMatrix = vmath::mat4::identity();
+     rotationMatrix = vmath::mat4::identity();
      //rotationMatrix = mat4::identity();
 
      //Do transformations...
-     modelViewMatrix = vmath::translate(0.0f, 0.0f, -4.0f);
+     modelViewMatrix = vmath::translate(-2.0f, 0.0f, -6.0f);
+     rotationMatrix = vmath::rotate(angle, 0.0f, 1.0f, 0.0f);
 
      modelViewProjectionMatrix = perspectiveProjectionMatrix * modelViewMatrix;
+
+     modelViewProjectionMatrix = modelViewProjectionMatrix * rotationMatrix;
 
      glUniformMatrix4fv(mvpUniform_SB,
                         1,
@@ -651,15 +816,70 @@ int main(int argc, const char* argv[])
     
      glActiveTexture(GL_TEXTURE0);
 
-     glBindTexture(GL_TEXTURE_2D, smileyTexture);
+     glBindTexture(GL_TEXTURE_2D, stoneTexture);
 
      glUniform1i(sampler_Uniform,
                 0);
 
-     glBindVertexArray(vao_rectangle_SB);
+     glBindVertexArray(vao_pyramid_SB);
 
      glDrawArrays(GL_TRIANGLE_FAN,
                     0,
+                    12);
+
+     glBindVertexArray(0);
+
+
+     //////////////DRAW CUBE/////////////////
+     modelViewMatrix = vmath::mat4::identity();
+     modelViewProjectionMatrix = vmath::mat4::identity();
+     rotationMatrix = vmath::mat4::identity();
+
+     modelViewMatrix = vmath::translate(2.0f, 0.0f, -6.5f);
+     rotationMatrix = vmath::rotate(angle, 0.0f, 0.0f, 1.0f);
+     rotationMatrix = rotationMatrix * vmath::rotate(angle, 0.0f, 1.0f, 0.0f);
+     rotationMatrix = rotationMatrix * vmath::rotate(angle, 1.0f, 0.0f, 0.0f);
+
+     modelViewProjectionMatrix = perspectiveProjectionMatrix * modelViewMatrix;
+
+     modelViewProjectionMatrix = modelViewProjectionMatrix * rotationMatrix;
+
+     glUniformMatrix4fv(mvpUniform_SB,
+                        1,
+                        GL_FALSE,
+                        modelViewProjectionMatrix);
+
+     glActiveTexture(GL_TEXTURE0);
+
+     glBindTexture(GL_TEXTURE_2D, kundaliTetxure);
+
+     glUniform1i(sampler_Uniform,
+                0);
+     //
+     glBindVertexArray(vao_cube_SB);
+
+     glDrawArrays(GL_TRIANGLE_FAN,
+                    0,
+                    4);
+
+      glDrawArrays(GL_TRIANGLE_FAN,
+                    4,
+                    4);
+
+      glDrawArrays(GL_TRIANGLE_FAN,
+                    8,
+                    4);
+
+      glDrawArrays(GL_TRIANGLE_FAN,
+                    12,
+                    4);
+
+     glDrawArrays(GL_TRIANGLE_FAN,
+                    16,
+                    4);
+
+     glDrawArrays(GL_TRIANGLE_FAN,
+                    20,
                     4);
 
      glBindVertexArray(0);
@@ -670,7 +890,7 @@ int main(int argc, const char* argv[])
 
     CGLUnlockContext((CGLContextObj)[[self openGLContext]CGLContextObj]);
     //fprintf(gpFile, "drawView end: unlocking context\n");
-    
+    angle += 0.1f;
 }
 
 -(BOOL)acceptsFirstResponder
@@ -736,10 +956,10 @@ int main(int argc, const char* argv[])
         glDeleteBuffers(1, &vbo_texcoord_rectangle_SB);
         vbo_texcoord_rectangle_SB = 0;
     }
-    if (vao_rectangle_SB)
+    if (vao_pyramid_SB)
     {
-        glDeleteVertexArrays(1, &vao_rectangle_SB);
-        vao_rectangle_SB = 0;
+        glDeleteVertexArrays(1, &vao_pyramid_SB);
+        vao_pyramid_SB = 0;
     }
     //vertex shader
     glDetachShader(gShaderProgramObject_SB,gVertexShaderObject_SB);
