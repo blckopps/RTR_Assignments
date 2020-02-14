@@ -536,6 +536,7 @@ int initialize(void)
 	//Attach vertex,fragment shader program
 	glAttachShader(gShaderProgramObject, gVertexShaderObject);
 	glAttachShader(gShaderProgramObject, gFragmentShaderObject);
+	
 	glAttachShader(gShaderProgramObject, gGeometryShaderObject);
 
 	//*** PRELINKING BINDING TO VERTEX ATTRIBUTES***
