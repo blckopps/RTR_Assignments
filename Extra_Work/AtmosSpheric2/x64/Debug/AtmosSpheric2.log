@@ -1,0 +1,22 @@
+﻿  demo.cpp
+d:\visualstudio_opengl\atmosspheric2\demo.cpp(297): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+d:\visualstudio_opengl\atmosspheric2\demo.cpp(302): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+d:\visualstudio_opengl\atmosspheric2\demo.cpp(301): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+  demo_main.cpp
+  Main.cpp
+d:\visualstudio_opengl\atmosspheric2\vmath.h(996): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\visualstudio_opengl\atmosspheric2\main.cpp(426): warning C4477: 'fwprintf' : format string '%s' requires an argument of type 'wchar_t *', but variadic argument 1 has type 'GLchar *'
+  d:\visualstudio_opengl\atmosspheric2\main.cpp(426): note: consider using '%hs' in the format string
+  d:\visualstudio_opengl\atmosspheric2\main.cpp(426): note: consider using '%Ts' in the format string
+  d:\visualstudio_opengl\atmosspheric2\main.cpp(426): note: this warning is based on non-standard semantics used by Visual C++
+d:\visualstudio_opengl\atmosspheric2\main.cpp(481): warning C4477: 'fwprintf' : format string '%s' requires an argument of type 'wchar_t *', but variadic argument 1 has type 'GLchar *'
+  d:\visualstudio_opengl\atmosspheric2\main.cpp(481): note: consider using '%hs' in the format string
+  d:\visualstudio_opengl\atmosspheric2\main.cpp(481): note: consider using '%Ts' in the format string
+  d:\visualstudio_opengl\atmosspheric2\main.cpp(481): note: this warning is based on non-standard semantics used by Visual C++
+d:\visualstudio_opengl\atmosspheric2\main.cpp(530): warning C4477: 'fwprintf' : format string '%s' requires an argument of type 'wchar_t *', but variadic argument 1 has type 'GLchar *'
+  d:\visualstudio_opengl\atmosspheric2\main.cpp(530): note: consider using '%hs' in the format string
+  d:\visualstudio_opengl\atmosspheric2\main.cpp(530): note: consider using '%Ts' in the format string
+  d:\visualstudio_opengl\atmosspheric2\main.cpp(530): note: this warning is based on non-standard semantics used by Visual C++
+  model.cpp
+  Generating Code...
+  AtmosSpheric2.vcxproj -> D:\VisualStudio_OpenGL\AtmosSpheric2\x64\Debug\AtmosSpheric2.exe
