@@ -1,0 +1,4 @@
+Program is started successfullyOpenGL Version : 4.1 INTEL-10.36.28
+GLSL Version : 4.10
+Value of ivertex shader compile Status is : 1Value of ifragment shader compile Status is : 1attach comp
+Value of iProgramLinkStatus is : 1Program is terminated successfully
