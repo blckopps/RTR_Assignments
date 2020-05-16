@@ -911,9 +911,8 @@ HRESULT initialize(void)
 	///////////////////Shader End///////////
 	float vertices[] =
 	{
-		0.0f, 1.0f, 0.0f,
-		1.0f, -1.0f, 0.0f,
-		-1.0f, -1.0f, 0.0f,
+		-1.0f, -1.0f, -0.5f,1.0f, 0.5f, -1.0f, 1.0f, 1.0f
+		
 	};
 
 	//create vertex buffer
@@ -1135,7 +1134,7 @@ void display(void)
 	XMMATRIX worldMatrix = XMMatrixIdentity();
 	XMMATRIX viewMatrix = XMMatrixIdentity();
 
-	XMMATRIX transaltionMatrix = XMMatrixTranslation(0.0f, 0.0f, 3.0f);
+	XMMATRIX transaltionMatrix = XMMatrixTranslation(0.0f, 0.0f, 4.0f);
 
 	worldMatrix = worldMatrix * transaltionMatrix;
 
