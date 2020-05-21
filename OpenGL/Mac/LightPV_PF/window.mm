@@ -1,4 +1,5 @@
 
+
 #import<Foundation/Foundation.h>
 #import<Cocoa/Cocoa.h>
 
@@ -144,12 +145,16 @@ int main(int argc, const char * argv[])
     
     GLuint lightPositionUniform;
     
+    GLuint shaderSwitchUniform;
+    ///////////////////////
     vmath::mat4 perspectiveProjectionMatrix;
     vmath::mat4 modelViewMatrix;
     
     GLfloat angle_rect;
     bool gbIsLighting;
     bool gbIsAnimation;
+    bool perVertex;
+    bool perFragmnet;
     
     GLuint vao_sphere;
     GLuint vbo_sphere_position;
@@ -179,13 +184,12 @@ int main(int argc, const char * argv[])
     
     float materialShininess ;
     
-    
 }
 
 -(id)initWithFrame:(NSRect)frame;
 {
     
-    //
+    
     /////////////////////////////////////////////////////////////
     self=[super initWithFrame:frame];
     
@@ -244,6 +248,8 @@ int main(int argc, const char * argv[])
     angle_rect = 0.0f;
     gbIsLighting = false;
     gbIsAnimation = false;
+    perVertex = true;
+    perFragmnet = false;
     
     ///////
     lightAmbient[0] = 0.0f;
@@ -316,7 +322,10 @@ int main(int argc, const char * argv[])
     "uniform mat4 u_model_matrix;" \
     "uniform mat4 u_view_matrix;" \
     "uniform mat4 u_projection_matrix;" \
+    
     "uniform int islkeypressed;" \
+    "uniform int shaderSwitch;" \
+    
     "uniform vec3 u_la;" \
     "uniform vec3 u_ld;" \
     "uniform vec3 u_ls;" \
@@ -325,10 +334,16 @@ int main(int argc, const char * argv[])
     "uniform vec3 u_ks;" \
     "uniform float u_shininess;" \
     "uniform vec4 u_light_position;" \
+    
     "out vec3 phong_ads_light;" \
+    "out vec3 tnorm;" \
+    "out vec3 light_direction;" \
+    "out vec3 viewer_vector;" \
     "void main(void)" \
     "{" \
     "if(islkeypressed == 1)" \
+    "{" \
+    "if(shaderSwitch == 1)" \
     "{" \
     "vec4 eye_coordinates = u_view_matrix *  u_model_matrix  * vPosition;" \
     "vec3 tnorm = normalize(mat3(u_view_matrix * u_model_matrix) * vNormal);" \
@@ -340,6 +355,14 @@ int main(int argc, const char * argv[])
     "vec3 difuse = u_ld * u_kd * tn_dot_ldirection;" \
     "vec3 specular = u_ls * u_ks * pow(max(dot(reflection_vector,viewer_vector),0),u_shininess);" \
     "phong_ads_light = ambient + difuse + specular;" \
+    "}" \
+    "else" \
+    "{" \
+    "vec4 eye_coordinates = u_view_matrix *  u_model_matrix  * vPosition;" \
+    "tnorm = mat3(u_view_matrix * u_model_matrix) * vNormal;" \
+    "light_direction = vec3(u_light_position - eye_coordinates);" \
+    "viewer_vector = vec3(-eye_coordinates.xyz);" \
+    "}"\
     "}" \
     "else" \
     "{" \
@@ -394,12 +417,45 @@ int main(int argc, const char * argv[])
     "\n" \
     "out vec4 fragColor;" \
     "uniform int islkeypressed;" \
+    "uniform int shaderSwitch;" \
+    //
+    "uniform vec3 u_la;" \
+    "uniform vec3 u_ld;" \
+    "uniform vec3 u_ls;" \
+    "uniform vec3 u_ka;" \
+    "uniform vec3 u_kd;" \
+    "uniform vec3 u_ks;" \
+    "uniform float u_shininess;" \
+    
+    
+    
     "in vec3 phong_ads_light;" \
+    "in vec3 tnorm;" \
+    "in vec3 light_direction;" \
+    "in vec3 viewer_vector;" \
+    
     "void main(void)" \
     "{" \
     "if(islkeypressed == 1)" \
     "{" \
+    
+    "if(shaderSwitch == 1)" \
+    "{" \
     "fragColor = vec4(phong_ads_light, 1.0);" \
+    "}" \
+    "else" \
+    "{" \
+    "vec3 tnorm_normalized = normalize(tnorm);" \
+    "vec3 light_direction_normalized = normalize(light_direction);" \
+    "vec3 viewer_vector_normalized = normalize(viewer_vector);" \
+    "float tn_dot_ldirection = max(dot(light_direction_normalized, tnorm_normalized), 0);" \
+    "vec3 reflection_vector = reflect(-light_direction_normalized, tnorm_normalized);" \
+    "vec3 ambient = u_la * u_ka;" \
+    "vec3 difuse = u_ld * u_kd * tn_dot_ldirection;" \
+    "vec3 specular = u_ls * u_ks * pow(max(dot(reflection_vector,viewer_vector_normalized),0),u_shininess);" \
+    "fragColor = vec4(ambient + difuse + specular,1.0);" \
+    "}" \
+    
     "}" \
     "else" \
     "{" \
@@ -496,6 +552,8 @@ int main(int argc, const char * argv[])
     //////////////////////////////post linking retrieving uniform location///////////////////////////
     
     isLKeyIsPressedUniforms = glGetUniformLocation(gShaderProgramObject, "islkeypressed");
+    
+    shaderSwitchUniform = glGetUniformLocation(gShaderProgramObject,"shaderSwitch" );
     
     laUniform = glGetUniformLocation(gShaderProgramObject, "u_la");
     ldUniform = glGetUniformLocation(gShaderProgramObject, "u_ld");
@@ -612,6 +670,15 @@ int main(int argc, const char * argv[])
     
     if (gbIsLighting == true)
     {
+        if(perVertex)
+        {
+            glUniform1i(shaderSwitchUniform, 1);
+        }
+        else
+        {
+            glUniform1i(shaderSwitchUniform, 0);
+        }
+        
         glUniform1i(isLKeyIsPressedUniforms, 1);
         
         glUniform1f(shininessUniform, materialShininess);
@@ -682,15 +749,28 @@ int main(int argc, const char * argv[])
     int key=(int)[[theEvent characters]characterAtIndex:0];
     switch(key)
     {
-        case 27:
+        case 'q':
+        case 'Q':
             [self release];
             [NSApp terminate:self];
             break;
             
-        case 'F':
-        case 'f':
+        case 27:        //escape
             [[self window]toggleFullScreen:self];
             break;
+            
+        case 'F':
+        case 'f':
+            perFragmnet = true;
+            perVertex = false;
+            break;
+            
+        case 'v':
+        case 'V':
+            perFragmnet = false;
+            perVertex = true;
+            break;
+            
         case 'L':case 'l':
             if (gbIsLighting == false)
             {
