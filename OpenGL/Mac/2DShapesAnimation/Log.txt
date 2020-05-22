@@ -1,0 +1,15 @@
+Log created....program started successfully
+NSMakeRect
+Before create window
+ENd create window
+Before initWithFrame for GLView
+setPixelFormat success
+setOpenGLContext success
+initWithFrame return self
+End applicationDidFinishLaunching
+OpenGL version: 4.1 INTEL-10.36.28 
+OpenGL shading version: 4.10 
+Post link success!!
+In reshape
+End reshape: context release
+Program terminated successfully
